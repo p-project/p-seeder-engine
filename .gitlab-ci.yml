@@ -1,0 +1,6 @@
+image: node:latest
+
+# To be removed and replaced by a real build
+demo:
+  script:
+    - node -v
