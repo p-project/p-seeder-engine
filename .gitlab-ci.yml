@@ -6,4 +6,5 @@ test:
     - npm run test
 lint:
   script:
+    - npm i
     - npm run lint
