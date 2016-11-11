@@ -4,7 +4,8 @@
   "description": "P-Seeder base library shared between P-Seeder CLI and P-Seeder App",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --compilers js:babel-core/register --require babel-polyfill ./"
+    "test": "mocha --compilers js:babel-core/register --require babel-polyfill ./",
+    "lint": "eslint ."
   },
   "repository": {
     "type": "git",
@@ -26,11 +27,12 @@
     "babel-register": "^6.18.0"
   },
   "devDependencies": {
+    "chai": "^3.5.0",
     "eslint": "^3.9.1",
     "eslint-config-semistandard": "^7.0.0",
     "eslint-config-standard": "^6.2.1",
     "eslint-plugin-promise": "^3.3.0",
     "eslint-plugin-standard": "^2.0.1",
-    "chai": "^3.5.0"
+    "mocha": "^3.1.2"
   }
 }

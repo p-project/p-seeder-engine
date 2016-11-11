@@ -1,7 +1,9 @@
 image: node:latest
 
-# To be removed and replaced by a real build
-demo:
+test:
   script:
     - npm i
     - npm run test
+lint:
+  script:
+    - npm run lint
