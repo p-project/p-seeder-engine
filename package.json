@@ -1,0 +1,21 @@
+{
+  "name": "p-seeder-base",
+  "version": "0.0.1",
+  "description": "P-Seeder base library shared between P-Seeder CLI and P-Seeder App",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.dldl.fr/p-project/p-seeder-base.git"
+  },
+  "keywords": [
+    "P-Seeder"
+  ],
+  "author": "P-Project",
+  "license": "MIT",
+  "dependencies": {
+    "webtorrent-hybrid": "^1.0.5"
+  }
+}
