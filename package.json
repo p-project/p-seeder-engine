@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha --compilers js:babel-core/register --require babel-polyfill ./",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "build": "babel index.js -s -D -d dist --presets es2015,stage-0",
+    "start": "node dist"
   },
   "repository": {
     "type": "git",
