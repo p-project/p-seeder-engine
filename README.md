@@ -1,4 +1,4 @@
-P-Seeder base
-=============
+P-Seeder engine
+===============
 
-P-Seeder base library shared between *P-Seeder CLI* and *P-Seeder App*.
+P-Seeder engine library used *P-Seeder CLI* and *P-Seeder App*.
