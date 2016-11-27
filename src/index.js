@@ -1,5 +1,4 @@
 import WebTorrent from 'webtorrent';
-import timers from 'timers';
 import express from 'express';
 
 const web = express();
