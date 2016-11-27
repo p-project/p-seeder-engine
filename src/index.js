@@ -1,5 +1,3 @@
-'use strict';
-
 import WebTorrent from 'webtorrent';
 import timers from 'timers';
 import express from 'express';
@@ -15,6 +13,7 @@ web.get('/list', (req, res) => {
 web.post('/add/:infoHash', (req, res) => {
   let infoHash = req.params.infoHash;
   bt.add(infoHash, (torrent) => {
+    console.log('added ' + infoHash);
     res.send(torrent.infoHash);
   });
 });
@@ -22,18 +21,27 @@ web.post('/add/:infoHash', (req, res) => {
 web.delete('/delete/:infoHash', (req, res) => {
   let infoHash = req.params.infoHash;
   bt.remove(infoHash, (err) => {
+    console.log('removed ' + infoHash);
     res.send(err);
   });
 });
 
-// print the status of known torrents every now and then
-timers.setInterval(() => {
-  bt.torrents.forEach((t) => {
-    console.log(t.infoHash + '\n' +
-      '\tUp: ' + t.uploadSpeed + ' ' + t.uploaded + '\n' +
-        '\tDown: ' + t.downloadSpeed + ' ' + t.downloaded
-    );
+web.get('/info/:infoHash', (req, res) => {
+  let infoHash = req.params.infoHash;
+  let torrent = bt.get(infoHash);
+  res.json({
+    infoHash: torrent.infoHash,
+    timeRemaining: torrent.timeRemaining,
+    received: torrent.received,
+    downloaded: torrent.downloaded,
+    uploaded: torrent.uploaded,
+    downloadSpeed: torrent.downloadSpeed,
+    uploadSpeed: torrent.uploadSpeed,
+    progress: torrent.progress,
+    ratio: torrent.ratio,
+    numPeers: torrent.numPeers,
+    path: torrent.path
   });
-}, 1000);
+});
 
 web.listen(2342);
