@@ -1,20 +1,40 @@
-import WebTorrent from 'webtorrent-hybrid';
+"use strict";
 
-let torrents = [];
-const client = new WebTorrent();
+import WebTorrent from 'webtorrent';
+import timers from 'timers';
+import express from 'express';
 
-console.log('hey');
+const web = express();
+const bt = new WebTorrent();
 
-const buffer = new Buffer('MDR');
-client.seed(buffer, function (torrent) {
-  torrents.push(torrent);
+web.get('/list', (req, res) => {
+    let torrentHashes = bt.torrents.map((t) => t.infoHash);
+    res.json(torrentHashes);
 });
 
-(async() => {
-  while (true) {
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    for (let i = 0; i < torrents.length; i++) {
-      console.log(torrents[i].infoHash + ' ' + torrents[i].magnetURI + ' ' + torrents[i].uploadSpeed + ' ' + torrents[i].uploaded);
-    }
-  }
-})();
+web.post('/add/:infoHash', (req, res) => {
+    let infoHash = req.params.infoHash
+    bt.add(infoHash, (torrent) => {
+        res.send(torrent.infoHash);
+    });
+});
+
+web.delete('/delete/:infoHash', (req, res) => {
+    let infoHash = req.params.infoHash;
+    bt.remove(infoHash, (err) => {
+        res.send(err);
+    });
+});
+
+// print the status of known torrents every now and then
+timers.setInterval(() => {
+    bt.torrents.forEach((t) => {
+        console.log(t.infoHash + '\n' +
+            '\tUp: ' + t.uploadSpeed + ' ' + t.uploaded + '\n' +
+            '\tDown: ' + t.downloadSpeed + ' ' + t.downloaded
+        );
+    });
+}, 1000);
+
+
+web.listen(2342);
