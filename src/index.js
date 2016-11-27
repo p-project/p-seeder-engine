@@ -1,8 +1,11 @@
 import WebTorrent from 'webtorrent';
 import express from 'express';
+import bodyParser from 'body-parser';
 
 const web = express();
 const bt = new WebTorrent();
+
+web.use(bodyParser.json());
 
 web.get('/list', (req, res) => {
   let torrentHashes = bt.torrents.map((t) => t.infoHash);
@@ -11,6 +14,21 @@ web.get('/list', (req, res) => {
 
 web.post('/add/:infoHash', (req, res) => {
   let infoHash = req.params.infoHash;
+  if (bt.get(infoHash)) {
+    return res.sendStatus(400, 'Torrent already added');
+  }
+  bt.add(infoHash, (torrent) => {
+    console.log('added ' + infoHash);
+    res.send(torrent.infoHash);
+  });
+});
+
+web.post('/add', (req, res) => {
+  if (!req.body || !req.body.torrent) return res.sendStatus(400);
+  let infoHash = req.body.torrent;
+  if (bt.get(infoHash)) {
+    return res.status(400).send('Torrent already added');
+  }
   bt.add(infoHash, (torrent) => {
     console.log('added ' + infoHash);
     res.send(torrent.infoHash);
