@@ -61,4 +61,5 @@ web.get('/info/:infoHash', (req, res) => {
   });
 });
 
-web.listen(2342);
+const port = 2342;
+web.listen(port, () => console.log('listening on port ' + port));
