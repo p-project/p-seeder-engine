@@ -2,7 +2,7 @@
   "name": "p-seeder-base",
   "version": "0.0.1",
   "description": "P-Seeder base library shared between P-Seeder CLI and P-Seeder App",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "dev": "nodemon -w src --exec \"babel-node src --presets es2015,stage-0\"",
     "test": "mocha --compilers js:babel-core/register --require babel-polyfill ./",
