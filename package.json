@@ -4,7 +4,7 @@
   "description": "P-Seeder base library shared between P-Seeder CLI and P-Seeder App",
   "main": "dist/index.js",
   "scripts": {
-    "dev": "nodemon -w src --exec \"babel-node src --presets es2015,stage-0\"",
+    "dev": "nodemon -w src --exec \"babel --plugins transform-regenerator src -d dist\"",
     "test": "mocha --compilers js:babel-core/register --require babel-polyfill ./",
     "lint": "eslint src",
     "build": "babel --plugins transform-regenerator src -d dist",
