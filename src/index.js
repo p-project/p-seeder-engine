@@ -46,20 +46,32 @@ web.delete('/delete/:infoHash', (req, res) => {
 web.get('/info/:infoHash', (req, res) => {
   let infoHash = req.params.infoHash;
   let torrent = bt.get(infoHash);
-  res.json({
-    infoHash: torrent.infoHash,
-    timeRemaining: torrent.timeRemaining,
-    received: torrent.received,
-    downloaded: torrent.downloaded,
-    uploaded: torrent.uploaded,
-    downloadSpeed: torrent.downloadSpeed,
-    uploadSpeed: torrent.uploadSpeed,
-    progress: torrent.progress,
-    ratio: torrent.ratio,
-    numPeers: torrent.numPeers,
-    path: torrent.path
-  });
+  if (!torrent) {
+    return res.status(400).send(`Torrent ${infoHash} not known`);
+  }
+  console.log(torrent);
+  res.json(pick(torrent,
+    'name',
+    'infoHash',
+    'timeRemaining',
+    'received',
+    'downloaded',
+    'uploaded',
+    'downloadSpeed',
+    'uploadSpeed',
+    'progress',
+    'length',
+    'ratio',
+    'numPeers',
+    'path'
+  ));
 });
 
 const port = 2342;
 web.listen(port, () => console.log('listening on port ' + port));
+
+function pick (o, ...fields) {
+  let res = {};
+  fields.forEach((f) => { res[f] = o[f]; });
+  return res;
+}
