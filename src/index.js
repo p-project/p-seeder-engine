@@ -49,7 +49,6 @@ web.get('/info/:infoHash', (req, res) => {
   if (!torrent) {
     return res.status(400).send(`Torrent ${infoHash} not known`);
   }
-  console.log(torrent);
   res.json(pick(torrent,
     'name',
     'infoHash',
