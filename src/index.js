@@ -3,7 +3,19 @@ import express from 'express';
 import bodyParser from 'body-parser';
 
 const web = express();
+
+let opts = {
+  announce: ['http://localhost:8000/announce']
+};
+
 const bt = new WebTorrent();
+
+// Seed test torrent
+var buffer = new Buffer('TestFileContent');
+buffer.name = 'TestFileName';
+bt.seed(buffer, opts, (torrent) => {
+  console.log('seeding test file' + torrent.infoHash);
+});
 
 web.use(bodyParser.json());
 
@@ -17,7 +29,7 @@ web.post('/add/:infoHash', (req, res) => {
   if (bt.get(infoHash)) {
     return res.sendStatus(400, 'Torrent already added');
   }
-  bt.add(infoHash, (torrent) => {
+  bt.add(infoHash, opts, (torrent) => {
     console.log('added ' + infoHash);
     res.send(torrent.infoHash);
   });
@@ -29,7 +41,7 @@ web.post('/add', (req, res) => {
   if (bt.get(infoHash)) {
     return res.status(400).send('Torrent already added');
   }
-  bt.add(infoHash, (torrent) => {
+  bt.add(infoHash, opts, (torrent) => {
     console.log('added ' + infoHash);
     res.send(torrent.infoHash);
   });
