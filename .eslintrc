@@ -1,9 +1,3 @@
 {
-  "extends": "semistandard",
-  "env": {
-    "node": true,
-    "es6": true,
-    "mocha": true,
-    "jasmine": true
-  }
+  "extends": "standard"
 }
