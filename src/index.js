@@ -11,13 +11,18 @@ let opts = {
 const bt = new WebTorrent();
 
 // Seed test torrent
-var buffer = new Buffer('TestFileContent');
+let buffer = new Buffer('TestFileContent');
 buffer.name = 'TestFileName';
 bt.seed(buffer, opts, (torrent) => {
   console.log('seeding test file' + torrent.infoHash);
 });
 
 web.use(bodyParser.json());
+web.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "access-control-allow-origin, content-type");
+  next();
+});
 
 web.get('/list', (req, res) => {
   let torrentHashes = bt.torrents.map((t) => t.infoHash);
@@ -27,7 +32,7 @@ web.get('/list', (req, res) => {
 web.post('/add/:infoHash', (req, res) => {
   let infoHash = req.params.infoHash;
   if (bt.get(infoHash)) {
-    return res.sendStatus(400, 'Torrent already added');
+    return res.sendStatus(400).send('Torrent already added');
   }
   bt.add(infoHash, opts, (torrent) => {
     console.log('added ' + infoHash);
@@ -36,7 +41,7 @@ web.post('/add/:infoHash', (req, res) => {
 });
 
 web.post('/add', (req, res) => {
-  if (!req.body || !req.body.torrent) return res.sendStatus(400);
+  if (!req.body || !req.body.torrent) return res.sendStatus(400).send('Torrent is missing');
   let infoHash = req.body.torrent;
   if (bt.get(infoHash)) {
     return res.status(400).send('Torrent already added');
