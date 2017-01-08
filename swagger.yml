@@ -1,0 +1,159 @@
+---
+swagger: '2.0'
+
+################################################################################
+#                              API Information                                 #
+################################################################################
+info:
+  version: "0.0.1"
+  title: P-Seeder-Engine
+  description: P-Project Seeder engine.
+  termsOfService: http://helloreverb.com/terms/
+  contact:
+    name: P-Team
+    email: contact@p-project.com
+    url: http://p-project.io
+  license:
+    name: MIT
+    url: http://opensource.org/licenses/MIT
+
+################################################################################
+#                  Host, Base Path, Schemes and Content Types                  #
+################################################################################
+host: localhost
+basePath: /
+schemes:
+  - http
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json
+
+################################################################################
+#                                   Parameters                                 #
+################################################################################
+parameters:
+  torrent_hash:
+    name: torrent_hash
+    in: path
+    description: The torrent hash
+    type: string
+    required: true
+
+################################################################################
+#                                           Paths                              #
+################################################################################
+paths:
+  /torrents/:
+    get:
+      summary: Torrents
+      description: |
+        The Torrents endpoint returns a seeding list of torrents
+      responses:
+        200:
+          description: An array of torrent_hash
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Torrent'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      parameters:
+       - name: torrent
+         in: body
+         description: the new torrent to seed
+         required: true
+         schema:
+           $ref: '#/definitions/Torrent'
+      summary: Torrents
+      description: |
+        Seed a new torrent
+      responses:
+        200:
+          description: ok
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+
+  /torrents/{torrent_hash}:
+    parameters:
+    - $ref: '#/parameters/torrent_hash'
+    get:
+      summary: Torrents
+      description: |
+        The Torrents endpoint returns a torrent based on the query
+      responses:
+        200:
+          description: Torrent
+          schema:
+            type: object
+            properties:
+              torrent:
+                $ref: '#/definitions/Torrent'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+
+    delete:
+      summary: Torrents
+      description: |
+        Remove a seeding torrent
+      responses:
+        200:
+          description: ok
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+
+    put:
+      parameters:
+       - name: torrent
+         in: body
+         description: The modified torrent
+         required: true
+         schema:
+           $ref: '#/definitions/Torrent'
+      summary: Torrents
+      description: |
+        Modify an existing torrent. Require to be the initial seeder
+      responses:
+        200:
+          description: ok
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+
+################################################################################
+#                                     Definitions                              #
+################################################################################
+definitions:
+  Torrent:
+    type: object
+    properties:
+      torrent_hash:
+        type: string
+        description: Unique hash representing the torrent
+      torrent_name:
+        type: string
+        description: Torrent name
+      num_peers:
+        type: integer
+        description: The number of peers
+  Error:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+      fields:
+        type: string
