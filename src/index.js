@@ -9,12 +9,13 @@ let opts = {
 }
 
 const bt = new WebTorrent()
+console.log('[PeerId] ' + bt.peerId)
 
 // Seed test torrent
 let buffer = new Buffer('TestFileContent')
 buffer.name = 'TestFileName'
 bt.seed(buffer, opts, (torrent) => {
-  console.log('seeding test file' + torrent.infoHash)
+  console.log('seeding test file' + torrent.infoHash + ' peerId=' + torrent.discovery.peerId)
 })
 
 web.use(bodyParser.json())
