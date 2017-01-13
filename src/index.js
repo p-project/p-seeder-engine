@@ -10,13 +10,13 @@ const opts = {
   announce: ['http://localhost:8000/announce']
 }
 
-const bt = new WebTorrent(opts)
-console.log('[PeerId] ' + bt.peerId)
+const client = new WebTorrent(opts)
+console.log('[PeerId] ' + client.peerId)
 
 // Seed test torrent
 let buffer = new Buffer('TestFileContent')
 buffer.name = 'TestFileName'
-bt.seed(buffer, opts, (torrent) => {
+client.seed(buffer, opts, (torrent) => {
   console.log('seeding test file' + torrent.infoHash + ' peerId=' + torrent.discovery.peerId)
 })
 
@@ -28,16 +28,21 @@ web.use(function (req, res, next) {
 })
 
 web.get('/list', (req, res) => {
-  let torrentHashes = bt.torrents.map((t) => t.infoHash)
+  let torrentHashes = client.torrents.map((t) => t.infoHash)
   res.json(torrentHashes)
+})
+
+web.get('/seed', (req, res) => {
+  // Contacter p-monitor pour savoir quel fichier seed
+  // DL & Seed (use client.add)
 })
 
 web.post('/add/:infoHash', (req, res) => {
   let infoHash = req.params.infoHash
-  if (bt.get(infoHash)) {
+  if (client.get(infoHash)) {
     return res.sendStatus(400).send('Torrent already added')
   }
-  bt.add(infoHash, opts, (torrent) => {
+  client.add(infoHash, opts, (torrent) => {
     console.log('added ' + infoHash)
     res.send(torrent.infoHash)
   })
@@ -46,10 +51,10 @@ web.post('/add/:infoHash', (req, res) => {
 web.post('/add', (req, res) => {
   if (!req.body || !req.body.torrent) return res.sendStatus(400).send('Torrent is missing')
   let infoHash = req.body.torrent
-  if (bt.get(infoHash)) {
+  if (client.get(infoHash)) {
     return res.status(400).send('Torrent already added')
   }
-  bt.add(infoHash, opts, (torrent) => {
+  client.add(infoHash, opts, (torrent) => {
     console.log('added ' + infoHash)
     res.send(torrent.infoHash)
   })
@@ -57,7 +62,7 @@ web.post('/add', (req, res) => {
 
 web.delete('/delete/:infoHash', (req, res) => {
   let infoHash = req.params.infoHash
-  bt.remove(infoHash, (err) => {
+  client.remove(infoHash, (err) => {
     console.log('removed ' + infoHash)
     res.send(err)
   })
@@ -65,7 +70,7 @@ web.delete('/delete/:infoHash', (req, res) => {
 
 web.get('/info/:infoHash', (req, res) => {
   let infoHash = req.params.infoHash
-  let torrent = bt.get(infoHash)
+  let torrent = client.get(infoHash)
   if (!torrent) {
     return res.status(400).send(`Torrent ${infoHash} not known`)
   }
@@ -95,4 +100,4 @@ function pick (o, ...fields) {
   return res
 }
 
-export default bt
+export default client
