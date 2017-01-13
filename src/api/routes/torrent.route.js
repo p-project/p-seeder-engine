@@ -1,5 +1,6 @@
 import express from 'express'
 import client from '../config/webtorrent'
+import * as pMonitor from '../config/pMonitor'
 
 const router = express.Router()
 
@@ -12,9 +13,14 @@ router.get('/list', (req, res) => {
   res.json(torrentHashes)
 })
 
-router.get('/seed', (req, res) => {
-  // Contacter p-monitor pour savoir quel fichier seed
-  // DL & Seed (use client.add)
+router.post('/seed', (req, res) => {
+  console.log('Received seed request')
+  const infoHash = pMonitor.getSeedTorrent()
+  client.add(infoHash, opts, (torrent) => {
+    console.log('added ' + infoHash)
+    pMonitor.notifySeeding()
+    res.send(torrent.infoHash)
+  })
 })
 
 router.post('/add/:infoHash', (req, res) => {
