@@ -1,14 +1,16 @@
+import {} from './cleanupExit'
+
 import WebTorrent from 'webtorrent'
 import express from 'express'
 import bodyParser from 'body-parser'
 
 const web = express()
 
-let opts = {
+const opts = {
   announce: ['http://localhost:8000/announce']
 }
 
-const bt = new WebTorrent()
+const bt = new WebTorrent(opts)
 console.log('[PeerId] ' + bt.peerId)
 
 // Seed test torrent
@@ -92,3 +94,5 @@ function pick (o, ...fields) {
   fields.forEach((f) => { res[f] = o[f] })
   return res
 }
+
+export default bt
