@@ -2,11 +2,16 @@
  * P-monitor client
  *
  **/
+import rp from 'request-promise'
 
-export function getSeedTorrent () {
-  return 'b7d5c3a66218c1f334d8c6467a589e864c7716b1'
+const urlPMonitor = 'http://localhost:3000/api/'
+
+export async function getSeedTorrent () {
+  const res = await rp({method: 'POST', uri: urlPMonitor + 'getSeedTorrent'})
+  console.log(res)
+  return res.hashInfo
 }
 
 export function notifySeeding () {
-  return 'lol'
+  return 'lol WIP'
 }

@@ -7,7 +7,7 @@
     "dev": "nodemon -w src --exec \"babel --plugins transform-regenerator src -d dist\"",
     "test": "mocha --compilers js:babel-core/register --require babel-polyfill ./",
     "lint": "eslint src",
-    "build": "babel --plugins transform-regenerator src -d dist",
+    "build": "babel src -s -D -d dist --presets es2015,stage-0",
     "start": "node dist"
   },
   "repository": {
@@ -22,16 +22,17 @@
   "dependencies": {
     "babel-cli": "^6.9.0",
     "babel-core": "^6.9.0",
-    "babel-plugin-transform-regenerator": "^6.16.1",
     "babel-polyfill": "^6.16.0",
     "babel-preset-es2015": "^6.9.0",
     "babel-preset-stage-0": "^6.5.0",
     "babel-register": "^6.18.0",
     "body-parser": "^1.15.2",
     "express": "^4.14.0",
+    "request-promise": "^4.1.1",
     "webtorrent-hybrid": "^1.0.5"
   },
   "devDependencies": {
+    "babel-plugin-transform-async-to-generator": "^6.16.0",
     "chai": "^3.5.0",
     "eslint": "^3.9.1",
     "eslint-config-standard": "^6.2.1",

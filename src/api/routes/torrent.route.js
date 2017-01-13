@@ -14,13 +14,16 @@ router.get('/list', (req, res) => {
 })
 
 router.post('/seed', (req, res) => {
-  console.log('Received seed request')
-  const infoHash = pMonitor.getSeedTorrent()
-  client.add(infoHash, opts, (torrent) => {
-    console.log('added ' + infoHash)
-    pMonitor.notifySeeding()
-    res.send(torrent.infoHash)
-  })
+  console.log('Received seed request');
+
+  (async() => {
+    const infoHash = await pMonitor.getSeedTorrent()
+    client.add(infoHash, opts, (torrent) => {
+      console.log('added ' + infoHash)
+      pMonitor.notifySeeding()
+      res.send(torrent.infoHash)
+    })
+  })()
 })
 
 router.post('/add/:infoHash', (req, res) => {
