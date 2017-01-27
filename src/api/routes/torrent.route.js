@@ -1,6 +1,5 @@
 import express from 'express'
 import client from '../config/webtorrent'
-import * as pMonitor from '../config/pMonitor'
 import validate from 'express-validation'
 import * as torrentCtrl from '../controllers/torrent.controller'
 import Joi from 'joi'
@@ -15,22 +14,12 @@ const opts = {
 router.route('/seedNewVideo')
   .post(validate({body: {videoPath: Joi.string().required()}}), torrentCtrl.seedNewVideo)
 
+/** POST /seed - Seed any video for the platform */
+router.post('/seed', torrentCtrl.seed)
+
 router.get('/list', (req, res) => {
   let torrentHashes = client.torrents.map((t) => t.infoHash)
   res.json(torrentHashes)
-})
-
-router.post('/seed', (req, res) => {
-  console.log('Received seed request');
-
-  (async() => {
-    const infoHash = await pMonitor.getSeedTorrent()
-    client.add(infoHash, opts, (torrent) => {
-      console.log('added ' + infoHash)
-      pMonitor.notifySeeding()
-      res.send(torrent.infoHash)
-    })
-  })()
 })
 
 router.post('/add/:infoHash', (req, res) => {

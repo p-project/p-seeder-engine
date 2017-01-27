@@ -8,8 +8,8 @@ const urlPMonitor = 'http://localhost:3000/api/'
 
 export async function getSeedTorrent () {
   const res = await rp({method: 'POST', uri: urlPMonitor + 'getSeedTorrent'})
-  console.log(res)
-  return res.hashInfo
+                .catch(() => { return null })
+  return res ? res.hashInfo : null
 }
 
 export function notifySeeding () {
