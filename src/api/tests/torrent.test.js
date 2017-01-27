@@ -19,7 +19,7 @@ describe('## Torrent APIs', () => {
       })()
     })
 
-    it('Should return bad request', (done) => {
+    it('Should return file not found', (done) => {
       (async() => {
         await request(app)
         .post('/seedNewVideo')
@@ -71,6 +71,43 @@ describe('## Torrent APIs', () => {
         .expect(200)
 
         expect(res.body).to.be.instanceof(Array)
+
+        done()
+      })()
+    })
+  })
+
+  describe('# POST add', () => {
+    it('Should return error parse infohash', (done) => {
+      (async() => {
+        await request(app)
+        .post('/add/1234')
+        .type('form')
+        .send(null)
+        .expect(Errors.ERR_ADD_INFOHASH_PARSE.httpCode)
+        .expect(Errors.getResBody(Errors.ERR_ADD_INFOHASH_PARSE))
+
+        done()
+      })()
+    })
+
+    it('Should return duplicate error', function (done) {
+      (async() => {
+        this.timeout(20000)
+        let res = await request(app)
+          .post('/seedNewVideo')
+          .type('form')
+          .send({videoPath: path.join(__dirname, '/fixtures/video1.avi')})
+          .expect(200)
+
+        expect(res.body.torrentHashInfo).to.exist
+
+        await request(app)
+          .post('/add/' + res.body.torrentHashInfo)
+          .type('form')
+          .send(null)
+          .expect(Errors.ERR_ADD_TORRENT_ALREADY_ADDED.httpCode)
+          .expect(Errors.getResBody(Errors.ERR_ADD_TORRENT_ALREADY_ADDED))
 
         done()
       })()
