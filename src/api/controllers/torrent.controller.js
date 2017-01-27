@@ -1,5 +1,6 @@
 import client from '../config/webtorrent'
 import * as pMonitor from '../config/pMonitor'
+import * as Errors from '../config/errors'
 
 import fs from 'fs'
 
@@ -17,8 +18,7 @@ export function seedNewVideo (req, res, next) {
         res.send({ torrentHashInfo: torrent.infoHash })
       })
     } else {
-      res.status(400)
-      res.send({ error: 'Not found' })
+      Errors.sendError(res, Errors.ERR_SEED_FILE_NOT_FOUND)
     }
   })
 }
@@ -34,7 +34,7 @@ export function seed (req, res, next) {
         res.send(torrent.infoHash)
       })
     } else {
-      res.send({error: 'Can\'t get the infoHash to seed via P-Monitor'})
+      Errors.sendError(res, Errors.ERR_INFOHASH_MONITOR)
     }
   })().catch(next)
 }
