@@ -17,14 +17,14 @@ export function seedNewVideo (req, res, next) {
         res.send({ torrentHashInfo: torrent.infoHash })
       })
     } else {
-      res.send({ error: err })
+      res.status(400)
+      res.send({ error: 'Not found' })
     }
   })
 }
 
 export function seed (req, res, next) {
   console.log('Received seed request');
-
   (async() => {
     const infoHash = await pMonitor.getSeedTorrent()
     if (infoHash) {
