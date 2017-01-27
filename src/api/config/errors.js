@@ -12,5 +12,9 @@ export const ERR_INFOHASH_MONITOR = {
 
 export function sendError (res, error) {
   res.status(error.httpCode)
-  res.send({status: 'error', id: error.id, message: error.msg})
+  res.send(getResBody(error))
+}
+
+export function getResBody (error) {
+  return {status: 'error', id: error.id, message: error.msg}
 }
