@@ -23,13 +23,8 @@ router.get('/list', torrentCtrl.list)
 /** GET /add/:infoHash - Download a torrent and seed it */
 router.post('/add/:infoHash', torrentCtrl.add)
 
-router.delete('/delete/:infoHash', (req, res) => {
-  let infoHash = req.params.infoHash
-  client.remove(infoHash, (err) => {
-    console.log('removed ' + infoHash)
-    res.send(err)
-  })
-})
+/** DELETE /delete/:infoHash - Delete a torrent */
+router.delete('/delete/:infoHash', torrentCtrl.deleteTorrent)
 
 router.get('/info/:infoHash', (req, res) => {
   let infoHash = req.params.infoHash

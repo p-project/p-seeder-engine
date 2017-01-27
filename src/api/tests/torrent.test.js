@@ -84,8 +84,8 @@ describe('## Torrent APIs', () => {
         .post('/add/1234')
         .type('form')
         .send(null)
-        .expect(Errors.ERR_ADD_INFOHASH_PARSE.httpCode)
-        .expect(Errors.getResBody(Errors.ERR_ADD_INFOHASH_PARSE))
+        .expect(Errors.ERR_INFOHASH_PARSE.httpCode)
+        .expect(Errors.getResBody(Errors.ERR_INFOHASH_PARSE))
 
         done()
       })()
@@ -106,8 +106,8 @@ describe('## Torrent APIs', () => {
           .post('/add/' + res.body.torrentHashInfo)
           .type('form')
           .send(null)
-          .expect(Errors.ERR_ADD_TORRENT_ALREADY_ADDED.httpCode)
-          .expect(Errors.getResBody(Errors.ERR_ADD_TORRENT_ALREADY_ADDED))
+          .expect(Errors.ERR_TORRENT_ALREADY_ADDED.httpCode)
+          .expect(Errors.getResBody(Errors.ERR_TORRENT_ALREADY_ADDED))
 
         done()
       })()

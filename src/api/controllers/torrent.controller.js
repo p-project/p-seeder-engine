@@ -52,15 +52,38 @@ export function add (req, res, next) {
   try {
     parseTorrent(infoHash)
   } catch (e) {
-    return Errors.sendError(res, Errors.ERR_ADD_INFOHASH_PARSE)
+    return Errors.sendError(res, Errors.ERR_INFOHASH_PARSE)
   }
 
   if (client.get(infoHash)) {
-    return Errors.sendError(res, Errors.ERR_ADD_TORRENT_ALREADY_ADDED)
+    return Errors.sendError(res, Errors.ERR_TORRENT_ALREADY_ADDED)
   }
 
   client.add(infoHash, opts, (torrent) => {
     console.log('added ' + infoHash)
     res.send(torrent.infoHash)
+  })
+}
+
+export function deleteTorrent (req, res, next) {
+  let infoHash = req.params.infoHash
+  try {
+    parseTorrent(infoHash)
+  } catch (e) {
+    return Errors.sendError(res, Errors.ERR_INFOHASH_PARSE)
+  }
+
+  let infoHashList = client.torrents.map((t) => t.infoHash)
+  if (!infoHashList.includes(infoHash)) {
+    return Errors.sendError(res, Errors.ERR_INFOHASH_NOT_FOUND)
+  }
+
+  client.remove(infoHash, (err) => {
+    console.log('removed ' + infoHash)
+    if (err) {
+      res.send({error: err.message})
+    } else {
+      res.send('removed')
+    }
   })
 }
