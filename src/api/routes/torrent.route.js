@@ -1,5 +1,4 @@
 import express from 'express'
-import client from '../config/webtorrent'
 import validate from 'express-validation'
 import * as torrentCtrl from '../controllers/torrent.controller'
 import Joi from 'joi'
@@ -26,32 +25,7 @@ router.post('/add/:infoHash', torrentCtrl.add)
 /** DELETE /delete/:infoHash - Delete a torrent */
 router.delete('/delete/:infoHash', torrentCtrl.deleteTorrent)
 
-router.get('/info/:infoHash', (req, res) => {
-  let infoHash = req.params.infoHash
-  let torrent = client.get(infoHash)
-  if (!torrent) {
-    return res.status(400).send(`Torrent ${infoHash} not known`)
-  }
-  res.json(pick(torrent,
-    'name',
-    'infoHash',
-    'timeRemaining',
-    'received',
-    'downloaded',
-    'uploaded',
-    'downloadSpeed',
-    'uploadSpeed',
-    'progress',
-    'length',
-    'ratio',
-    'numPeers',
-    'path'
-  ))
-})
+/** GET /info/:infoHash - Get info about a torrent */
+router.get('/info/:infoHash', torrentCtrl.info)
 
-function pick (o, ...fields) {
-  let res = {}
-  fields.forEach((f) => { res[f] = o[f] })
-  return res
-}
 export default router

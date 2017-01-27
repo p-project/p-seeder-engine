@@ -87,3 +87,39 @@ export function deleteTorrent (req, res, next) {
     }
   })
 }
+
+export function info (req, res, next) {
+  function pick (o, ...fields) {
+    let res = {}
+    fields.forEach((f) => { res[f] = o[f] })
+    return res
+  }
+
+  let infoHash = req.params.infoHash
+  try {
+    parseTorrent(infoHash)
+  } catch (e) {
+    return Errors.sendError(res, Errors.ERR_INFOHASH_PARSE)
+  }
+
+  let torrent = client.get(infoHash)
+  if (!torrent) {
+    return Errors.sendError(res, Errors.ERR_INFOHASH_NOT_FOUND)
+  }
+
+  res.json(pick(torrent,
+    'name',
+    'infoHash',
+    'timeRemaining',
+    'received',
+    'downloaded',
+    'uploaded',
+    'downloadSpeed',
+    'uploadSpeed',
+    'progress',
+    'length',
+    'ratio',
+    'numPeers',
+    'path'
+  ))
+}
