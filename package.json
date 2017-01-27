@@ -28,6 +28,8 @@
     "babel-register": "^6.18.0",
     "body-parser": "^1.15.2",
     "express": "^4.14.0",
+    "express-validation": "^1.0.1",
+    "joi": "^10.2.0",
     "request-promise": "^4.1.1",
     "webtorrent-hybrid": "^1.0.5"
   },
@@ -42,6 +44,6 @@
     "nodemon": "^1.11.0"
   },
   "bin": {
-      "pseederd": "dist/index.js"
+    "pseederd": "dist/index.js"
   }
 }

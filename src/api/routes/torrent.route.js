@@ -1,12 +1,19 @@
 import express from 'express'
 import client from '../config/webtorrent'
 import * as pMonitor from '../config/pMonitor'
+import validate from 'express-validation'
+import * as torrentCtrl from '../controllers/torrent.controller'
+import Joi from 'joi'
 
 const router = express.Router()
 
 const opts = {
   announce: ['http://localhost:8000/announce']
 }
+
+/** POST /seedNewVideo - Seed a new video */
+router.route('/seedNewVideo')
+  .post(validate({body: {videoPath: Joi.string().required()}}), torrentCtrl.seedNewVideo)
 
 router.get('/list', (req, res) => {
   let torrentHashes = client.torrents.map((t) => t.infoHash)
