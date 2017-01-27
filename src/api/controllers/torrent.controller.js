@@ -1,3 +1,5 @@
+import parseTorrent from 'parse-torrent'
+
 import client from '../config/webtorrent'
 import * as pMonitor from '../config/pMonitor'
 import * as Errors from '../config/errors'
@@ -42,4 +44,23 @@ export function seed (req, res, next) {
 export function list (req, res, next) {
   let torrentHashes = client.torrents.map((t) => t.infoHash)
   res.json(torrentHashes)
+}
+
+export function add (req, res, next) {
+  let infoHash = req.params.infoHash
+
+  try {
+    parseTorrent(infoHash)
+  } catch (e) {
+    return Errors.sendError(res, Errors.ERR_ADD_INFOHASH_PARSE)
+  }
+
+  if (client.get(infoHash)) {
+    return Errors.sendError(res, Errors.ERR_ADD_TORRENT_ALREADY_ADDED)
+  }
+
+  client.add(infoHash, opts, (torrent) => {
+    console.log('added ' + infoHash)
+    res.send(torrent.infoHash)
+  })
 }

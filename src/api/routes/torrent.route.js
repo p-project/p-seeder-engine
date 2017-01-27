@@ -20,28 +20,8 @@ router.post('/seed', torrentCtrl.seed)
 /** GET /list - Get a list of hashInfo seeded video */
 router.get('/list', torrentCtrl.list)
 
-router.post('/add/:infoHash', (req, res) => {
-  let infoHash = req.params.infoHash
-  if (client.get(infoHash)) {
-    return res.sendStatus(400).send('Torrent already added')
-  }
-  client.add(infoHash, opts, (torrent) => {
-    console.log('added ' + infoHash)
-    res.send(torrent.infoHash)
-  })
-})
-
-router.post('/add', (req, res) => {
-  if (!req.body || !req.body.torrent) return res.sendStatus(400).send('Torrent is missing')
-  let infoHash = req.body.torrent
-  if (client.get(infoHash)) {
-    return res.status(400).send('Torrent already added')
-  }
-  client.add(infoHash, opts, (torrent) => {
-    console.log('added ' + infoHash)
-    res.send(torrent.infoHash)
-  })
-})
+/** GET /add/:infoHash - Download a torrent and seed it */
+router.post('/add/:infoHash', torrentCtrl.add)
 
 router.delete('/delete/:infoHash', (req, res) => {
   let infoHash = req.params.infoHash

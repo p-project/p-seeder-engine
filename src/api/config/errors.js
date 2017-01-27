@@ -10,6 +10,18 @@ export const ERR_INFOHASH_MONITOR = {
   httpCode: 400
 }
 
+export const ERR_ADD_INFOHASH_PARSE = {
+  id: 30,
+  msg: 'Can\'t parse infoHash',
+  httpCode: 400
+}
+
+export const ERR_ADD_TORRENT_ALREADY_ADDED = {
+  id: 40,
+  msg: 'Torrent already added',
+  httpCode: 400
+}
+
 export function sendError (res, error) {
   res.status(error.httpCode)
   res.send(getResBody(error))
