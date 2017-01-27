@@ -4,6 +4,15 @@ import path from 'path'
 
 import app from '../'
 import * as Errors from '../config/errors'
+import client from '../config/webtorrent'
+
+async function seedNewVideo (videoPath) {
+  return await request(app)
+    .post('/seedNewVideo')
+    .type('form')
+    .send({videoPath})
+    .expect(200)
+}
 
 describe('## Torrent APIs', () => {
   describe('# POST seedNewVideo', () => {
@@ -34,13 +43,9 @@ describe('## Torrent APIs', () => {
     it('Should return infoHash', function (done) {
       this.timeout(20000);
       (async() => {
-        const res = await request(app)
-        .post('/seedNewVideo')
-        .type('form')
-        .send({videoPath: path.join(__dirname, '/torrent.test.js')})
-        .expect(200)
-
+        const res = await seedNewVideo(path.join(__dirname, '/torrent.test.js'))
         expect(res.body.torrentHashInfo).to.exist
+
         done()
       })()
     })
@@ -61,7 +66,7 @@ describe('## Torrent APIs', () => {
     })
   })
 
-  describe('# POST list', () => {
+  describe('# GET list', () => {
     it('Should list hashInfo', (done) => {
       (async() => {
         let res = await request(app)
@@ -94,13 +99,7 @@ describe('## Torrent APIs', () => {
     it('Should return duplicate error', function (done) {
       (async() => {
         this.timeout(20000)
-        let res = await request(app)
-          .post('/seedNewVideo')
-          .type('form')
-          .send({videoPath: path.join(__dirname, '/fixtures/video1.avi')})
-          .expect(200)
-
-        expect(res.body.torrentHashInfo).to.exist
+        const res = await seedNewVideo(path.join(__dirname, '/fixtures/video1.avi'))
 
         await request(app)
           .post('/add/' + res.body.torrentHashInfo)
@@ -108,6 +107,53 @@ describe('## Torrent APIs', () => {
           .send(null)
           .expect(Errors.ERR_TORRENT_ALREADY_ADDED.httpCode)
           .expect(Errors.getResBody(Errors.ERR_TORRENT_ALREADY_ADDED))
+
+        done()
+      })()
+    })
+  })
+
+  describe('# DELETE delete', () => {
+    it('Should return error parse infohash', (done) => {
+      (async() => {
+        await request(app)
+        .delete('/delete/1234')
+        .type('form')
+        .send(null)
+        .expect(Errors.ERR_INFOHASH_PARSE.httpCode)
+        .expect(Errors.getResBody(Errors.ERR_INFOHASH_PARSE))
+
+        done()
+      })()
+    })
+    it('Should return error torrent not found', (done) => {
+      (async() => {
+        await request(app)
+        .delete('/delete/b7d5c3a66218c1f334d8c6467a589e864c7716b1')
+        .type('form')
+        .send(null)
+        .expect(Errors.ERR_INFOHASH_NOT_FOUND.httpCode)
+        .expect(Errors.getResBody(Errors.ERR_INFOHASH_NOT_FOUND))
+
+        done()
+      })()
+    })
+
+    it('Should remove torrent', function (done) {
+      (async() => {
+        this.timeout(20000)
+        const res = await seedNewVideo(path.join(__dirname, '/fixtures/video2.avi'))
+        const infoHash = res.body.torrentHashInfo
+
+        const oldTorrentLength = client.torrents.length
+
+        await request(app)
+        .delete('/delete/' + infoHash)
+        .type('form')
+        .send(null)
+        .expect(200)
+
+        expect(oldTorrentLength).to.be.equal(client.torrents.length + 1)
 
         done()
       })()
