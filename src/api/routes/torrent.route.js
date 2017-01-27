@@ -17,10 +17,8 @@ router.route('/seedNewVideo')
 /** POST /seed - Seed any video for the platform */
 router.post('/seed', torrentCtrl.seed)
 
-router.get('/list', (req, res) => {
-  let torrentHashes = client.torrents.map((t) => t.infoHash)
-  res.json(torrentHashes)
-})
+/** GET /list - Get a list of hashInfo seeded video */
+router.get('/list', torrentCtrl.list)
 
 router.post('/add/:infoHash', (req, res) => {
   let infoHash = req.params.infoHash

@@ -60,4 +60,20 @@ describe('## Torrent APIs', () => {
       })()
     })
   })
+
+  describe('# POST list', () => {
+    it('Should list hashInfo', (done) => {
+      (async() => {
+        let res = await request(app)
+        .get('/list')
+        .type('form')
+        .send(null)
+        .expect(200)
+
+        expect(res.body).to.be.instanceof(Array)
+
+        done()
+      })()
+    })
+  })
 })

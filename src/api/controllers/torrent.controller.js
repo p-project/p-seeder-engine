@@ -38,3 +38,8 @@ export function seed (req, res, next) {
     }
   })().catch(next)
 }
+
+export function list (req, res, next) {
+  let torrentHashes = client.torrents.map((t) => t.infoHash)
+  res.json(torrentHashes)
+}
