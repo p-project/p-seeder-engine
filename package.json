@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "dev": "nodemon -w src --exec \"babel --plugins transform-regenerator src -d dist\"",
-    "test": "mocha --compilers js:babel-core/register --require babel-polyfill ./",
+    "test": "mocha --compilers js:babel-core/register --require babel-polyfill ./src/api/tests",
     "lint": "eslint src",
     "build": "babel src -s -D -d dist --presets es2015,stage-0",
     "start": "node dist"
