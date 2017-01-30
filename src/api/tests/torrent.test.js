@@ -11,7 +11,6 @@ async function seedNewVideo (videoPath) {
     .post('/seedNewVideo')
     .type('form')
     .send({videoPath})
-    .expect(200)
 }
 
 describe('## Torrent APIs', () => {
@@ -43,8 +42,17 @@ describe('## Torrent APIs', () => {
     it('Should return infoHash', function (done) {
       this.timeout(20000);
       (async() => {
-        const res = await seedNewVideo(path.join(__dirname, '/torrent.test.js'))
+        const res = await seedNewVideo(path.join(__dirname, '/fixtures/video3.avi'))
         expect(res.body.torrentHashInfo).to.exist
+        done()
+      })()
+    })
+
+    it('Should return duplicate error', function (done) {
+      this.timeout(20000);
+      (async() => {
+        const res = await seedNewVideo(path.join(__dirname, '/fixtures/video3.avi'))
+        expect(res.body).to.be.eql(Errors.getResBody(Errors.ERR_TORRENT_ALREADY_ADDED))
 
         done()
       })()
