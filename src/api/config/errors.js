@@ -36,3 +36,7 @@ export function sendError (res, error) {
 export function getResBody (error) {
   return {status: 'error', id: error.id, message: error.msg}
 }
+
+export function sendUnexpectedError (res, error) {
+  res.send(error)
+}

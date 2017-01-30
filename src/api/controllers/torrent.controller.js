@@ -1,10 +1,10 @@
 import parseTorrent from 'parse-torrent'
+import createTorrent from 'create-torrent'
+import fs from 'fs'
 
 import client from '../config/webtorrent'
 import * as pMonitor from '../config/pMonitor'
 import * as Errors from '../config/errors'
-
-import fs from 'fs'
 
 const opts = {
   announce: ['http://localhost:8000/announce']
@@ -15,9 +15,20 @@ export function seedNewVideo (req, res, next) {
   const videoPath = req.body.videoPath
   fs.stat(videoPath, function (err, exists) {
     if (err == null) {
-      client.seed(videoPath, opts, (torrent) => {
-        console.log('seeding test file' + torrent.infoHash + ' peerId=' + torrent.discovery.peerId)
-        res.send({ torrentHashInfo: torrent.infoHash })
+      createTorrent(videoPath, (createTorrentErr, torrentBuf) => {
+        if (createTorrentErr) {
+          return Errors.sendUnexpectedError(res, createTorrentErr)
+        }
+
+        var existingTorrent = client.get(torrentBuf)
+        if (existingTorrent) {
+          return Errors.sendError(res, Errors.ERR_TORRENT_ALREADY_ADDED)
+        }
+
+        client.seed(videoPath, opts, (torrent) => {
+          console.log('seeding test file' + torrent.infoHash + ' peerId=' + torrent.discovery.peerId)
+          res.send({ torrentHashInfo: torrent.infoHash })
+        })
       })
     } else {
       Errors.sendError(res, Errors.ERR_SEED_FILE_NOT_FOUND)
