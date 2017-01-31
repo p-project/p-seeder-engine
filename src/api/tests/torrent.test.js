@@ -167,4 +167,61 @@ describe('## Torrent APIs', () => {
       })()
     })
   })
+
+  describe('# GET info', () => {
+    it('Should return error parse infohash', (done) => {
+      (async() => {
+        await request(app)
+        .get('/info/1234')
+        .type('form')
+        .send(null)
+        .expect(Errors.ERR_INFOHASH_PARSE.httpCode)
+        .expect(Errors.getResBody(Errors.ERR_INFOHASH_PARSE))
+
+        done()
+      })()
+    })
+    it('Should return error torrent not found', (done) => {
+      (async() => {
+        await request(app)
+        .get('/info/b7d5c3a66218c1f334d8c6467a589e864c7716b1')
+        .type('form')
+        .send(null)
+        .expect(Errors.ERR_INFOHASH_NOT_FOUND.httpCode)
+        .expect(Errors.getResBody(Errors.ERR_INFOHASH_NOT_FOUND))
+
+        done()
+      })()
+    })
+
+    it('Should return success info', function (done) {
+      (async() => {
+        this.timeout(20000)
+        const res = await seedNewVideo(path.join(__dirname, '/fixtures/video4.avi'))
+        const infoHash = res.body.torrentHashInfo
+
+        const resInfo = await request(app)
+        .get('/info/' + infoHash)
+        .type('form')
+        .send(null)
+
+        expect(resInfo.body).to.exist
+        expect(resInfo.body.name).to.exist
+        expect(resInfo.body.infoHash).to.exist
+        expect(resInfo.body.timeRemaining).to.exist
+        expect(resInfo.body.received).to.exist
+        expect(resInfo.body.downloaded).to.exist
+        expect(resInfo.body.uploaded).to.exist
+        expect(resInfo.body.downloadSpeed).to.exist
+        expect(resInfo.body.uploadSpeed).to.exist
+        expect(resInfo.body.progress).to.exist
+        expect(resInfo.body.length).to.exist
+        expect(resInfo.body.ratio).to.exist
+        expect(resInfo.body.numPeers).to.exist
+        expect(resInfo.body.path).to.exist
+
+        done()
+      })()
+    })
+  })
 })
