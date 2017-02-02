@@ -1,4 +1,4 @@
-import chai, { expect } from 'chai'
+import { expect } from 'chai'
 import request from 'supertest-as-promised'
 import path from 'path'
 

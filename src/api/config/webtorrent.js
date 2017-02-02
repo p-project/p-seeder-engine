@@ -4,17 +4,6 @@ const client = new WebTorrent()
 
 console.log('[PeerId] ' + client.peerId)
 
-const opts = {
-  announce: ['http://localhost:8000/announce']
-}
-
-// Seed test torrent
-let buffer = new Buffer('TestFileContent')
-buffer.name = 'TestFileName'
-client.seed(buffer, opts, (torrent) => {
-  console.log('seeding test file' + torrent.infoHash + ' peerId=' + torrent.discovery.peerId)
-})
-
 // Catch exit
 process.stdin.resume()
 process.on('exit', function (code) {

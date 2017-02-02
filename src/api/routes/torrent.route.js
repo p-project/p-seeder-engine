@@ -5,10 +5,6 @@ import Joi from 'joi'
 
 const router = express.Router()
 
-const opts = {
-  announce: ['http://localhost:8000/announce']
-}
-
 /** POST /seedNewVideo - Seed a new video */
 router.route('/seedNewVideo')
   .post(validate({body: {videoPath: Joi.string().required()}}), torrentCtrl.seedNewVideo)
