@@ -7,7 +7,7 @@ import * as pMonitor from '../config/pMonitor'
 import * as Errors from '../config/errors'
 
 const opts = {
-  announce: ['http://localhost:8000/announce']
+  announce: [process.env.ANNOUNCE_URL]
 }
 
 export function seedNewVideo (req, res, next) {

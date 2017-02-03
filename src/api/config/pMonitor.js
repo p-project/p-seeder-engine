@@ -1,14 +1,14 @@
 /**
- * P-monitor client
- *
- **/
+* P-monitor client
+*
+**/
 import rp from 'request-promise'
 
-const urlPMonitor = 'http://localhost:3000/api/'
+const urlPMonitor = process.env.P_MONITOR_API_URL
 
 export async function getSeedTorrent () {
   const res = await rp({method: 'POST', uri: urlPMonitor + 'getSeedTorrent'})
-                .catch(() => { return null })
+              .catch(() => { return null })
   return res ? res.hashInfo : null
 }
 

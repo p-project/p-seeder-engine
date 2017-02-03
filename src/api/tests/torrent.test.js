@@ -1,3 +1,5 @@
+import index from '../../'
+
 import { expect } from 'chai'
 import request from 'supertest-as-promised'
 import path from 'path'
@@ -41,6 +43,7 @@ describe('## Torrent APIs', () => {
 
     it('Should return infoHash', function (done) {
       this.timeout(20000);
+
       (async() => {
         const res = await seedNewVideo(path.join(__dirname, '/fixtures/video3.avi'))
         expect(res.body.torrentHashInfo).to.exist
