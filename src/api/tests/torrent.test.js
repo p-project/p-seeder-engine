@@ -1,4 +1,4 @@
-import index from '../../'
+import {} from '../../'
 
 import { expect } from 'chai'
 import request from 'supertest-as-promised'
