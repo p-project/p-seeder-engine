@@ -26,7 +26,7 @@ export function seedNewVideo (req, res, next) {
         }
 
         client.seed(videoPath, opts, (torrent) => {
-          console.log('seeding test file' + torrent.infoHash + ' peerId=' + torrent.discovery.peerId)
+          console.log('seeding infohash ' + torrent.infoHash + ' peerId=' + torrent.discovery.peerId)
           res.send({ torrentHashInfo: torrent.infoHash })
         })
       })
