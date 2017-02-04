@@ -58,7 +58,9 @@ export function list (req, res, next) {
 }
 
 export function add (req, res, next) {
-  let infoHash = req.params.infoHash
+  let infoHash = req.params.infoHash !== undefined
+    ? req.params.infoHash
+    : req.body.infoHash
 
   try {
     parseTorrent(infoHash)

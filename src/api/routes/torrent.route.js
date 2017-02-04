@@ -15,8 +15,12 @@ router.post('/seed', torrentCtrl.seed)
 /** GET /list - Get a list of hashInfo seeded video */
 router.get('/list', torrentCtrl.list)
 
-/** GET /add/:infoHash - Download a torrent and seed it */
+/** POST /add/:infoHash - Download a torrent and seed it */
 router.post('/add/:infoHash', torrentCtrl.add)
+
+/** POST /add - Download a torrent and seed it */
+router.route('/add')
+  .post(validate({body: {infoHash: Joi.string().required()}}), torrentCtrl.add)
 
 /** DELETE /delete/:infoHash - Delete a torrent */
 router.delete('/delete/:infoHash', torrentCtrl.deleteTorrent)
