@@ -8,43 +8,43 @@ import app from '../'
 import * as Errors from '../config/errors'
 import client from '../config/webtorrent'
 
-function seedNewVideo (videoPath) {
+function seed (path) {
   return request(app)
-    .post('/seedNewVideo')
+    .post('/seed')
     .type('json')
-    .send({videoPath})
+    .send({path})
 }
 
 describe('## Torrent APIs', () => {
-  describe('# POST seedNewVideo', () => {
+  describe('# POST seed', () => {
     it('Should return bad request', () =>
-      request(app).post('/seedNewVideo').expect(400)
+      request(app).post('/seed').expect(400)
     )
 
     it('Should return file not found', () =>
       request(app)
-      .post('/seedNewVideo')
+      .post('/seed')
       .type('json')
-      .send({videoPath: '/NotFound/file/not/Exist'})
+      .send({path: '/NotFound/file/not/Exist'})
       .expect(Errors.ERR_SEED_FILE_NOT_FOUND.httpCode)
       .expect(Errors.getResBody(Errors.ERR_SEED_FILE_NOT_FOUND))
     )
 
     it('Should return infoHash', async () => {
-      const res = await seedNewVideo(path.join(__dirname, '/fixtures/video3.avi'))
+      const res = await seed(path.join(__dirname, '/fixtures/video3.avi'))
       return expect(res.body).to.have.property('torrentHashInfo')
     }).timeout(20000)
 
     it('Should return duplicate error', async() => {
-      const res = await seedNewVideo(path.join(__dirname, '/fixtures/video3.avi'))
+      const res = await seed(path.join(__dirname, '/fixtures/video3.avi'))
       return expect(res.body).to.be.eql(Errors.getResBody(Errors.ERR_TORRENT_ALREADY_ADDED))
     }).timeout(20000)
   })
 
-  describe('# POST seed', () => {
+  describe('# PUT seedMonitored', () => {
     it('Should return error monitor', () => {
       return request(app)
-        .post('/seed')
+        .put('/seedMonitored')
         .expect(Errors.ERR_INFOHASH_MONITOR.httpCode)
         .expect(Errors.getResBody(Errors.ERR_INFOHASH_MONITOR))
     })
@@ -69,7 +69,7 @@ describe('## Torrent APIs', () => {
     )
 
     it('Should return duplicate error', async() => {
-      const res = await seedNewVideo(path.join(__dirname, '/fixtures/video1.avi'))
+      const res = await seed(path.join(__dirname, '/fixtures/video1.avi'))
       return request(app)
         .post('/add/' + res.body.torrentHashInfo)
         .expect(Errors.ERR_TORRENT_ALREADY_ADDED.httpCode)
@@ -88,7 +88,7 @@ describe('## Torrent APIs', () => {
     )
 
     it('Should return duplicate error', async() => {
-      const res = await seedNewVideo(path.join(__dirname, '/fixtures/video2.avi'))
+      const res = await seed(path.join(__dirname, '/fixtures/video2.avi'))
       return request(app)
         .post('/add')
         .type('json')
@@ -115,7 +115,7 @@ describe('## Torrent APIs', () => {
   })
 
   it('Should remove torrent', async() => {
-    const res = await seedNewVideo(path.join(__dirname, '/fixtures/video2.avi'))
+    const res = await seed(path.join(__dirname, '/fixtures/video2.avi'))
     const infoHash = res.body.torrentHashInfo
 
     const oldTorrentLength = client.torrents.length
@@ -143,7 +143,7 @@ describe('# GET info', () => {
   )
 
   it('Should return success info', async() => {
-    const res = await seedNewVideo(path.join(__dirname, '/fixtures/video4.avi'))
+    const res = await seed(path.join(__dirname, '/fixtures/video4.avi'))
     const infoHash = res.body.torrentHashInfo
 
     const resInfo = await request(app).get('/info/' + infoHash)
