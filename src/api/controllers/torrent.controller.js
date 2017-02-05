@@ -7,7 +7,8 @@ import * as pMonitor from '../config/pMonitor'
 import * as Errors from '../config/errors'
 
 const opts = {
-  announce: [process.env.ANNOUNCE_URL]
+  announce: [process.env.ANNOUNCE_URL],
+  path: process.env.DOWNLOAD_PATH
 }
 
 export function seedNewVideo (req, res, next) {
