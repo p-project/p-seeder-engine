@@ -5,27 +5,27 @@ import Joi from 'joi'
 
 const router = express.Router()
 
-/** POST /seedNewVideo - Seed a new video */
-router.route('/seedNewVideo')
-  .post(validate({body: {videoPath: Joi.string().required()}}), torrentCtrl.seedNewVideo)
+// Seed a new file
+router.route('/seed')
+  .post(validate({body: {path: Joi.string().required()}}), torrentCtrl.seed)
 
-/** POST /seed - Seed any video for the platform */
-router.post('/seed', torrentCtrl.seed)
+// Seed files sent by the monitor
+router.put('/seedMonitored', torrentCtrl.seedMonitored)
 
-/** GET /list - Get a list of hashInfo seeded video */
+// List all currently known infoHashes
 router.get('/list', torrentCtrl.list)
 
-/** POST /add/:infoHash - Download a torrent and seed it */
+// Add a torrent to be downloaded by infohash
 router.post('/add/:infoHash', torrentCtrl.add)
 
-/** POST /add - Download a torrent and seed it */
+// Add a torrent to be downloaded by infohash or magnet link
 router.route('/add')
   .post(validate({body: {infoHash: Joi.string().required()}}), torrentCtrl.add)
 
-/** DELETE /delete/:infoHash - Delete a torrent */
+// Delete a torrent by infohash
 router.delete('/delete/:infoHash', torrentCtrl.deleteTorrent)
 
-/** GET /info/:infoHash - Get info about a torrent */
+// Get information about a torrent by infohash
 router.get('/info/:infoHash', torrentCtrl.info)
 
 export default router

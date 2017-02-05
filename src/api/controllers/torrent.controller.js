@@ -11,12 +11,12 @@ const opts = {
   path: process.env.DOWNLOAD_PATH
 }
 
-export function seedNewVideo (req, res, next) {
-  console.log('seedNewVideo')
-  const videoPath = req.body.videoPath
-  fs.stat(videoPath, function (err, exists) {
+export function seed (req, res, next) {
+  console.log('Seeding new file')
+  const path = req.body.path
+  fs.stat(path, function (err, exists) {
     if (err == null) {
-      createTorrent(videoPath, (createTorrentErr, torrentBuf) => {
+      createTorrent(path, (createTorrentErr, torrentBuf) => {
         if (createTorrentErr) {
           return Errors.sendUnexpectedError(res, createTorrentErr)
         }
@@ -26,7 +26,7 @@ export function seedNewVideo (req, res, next) {
           return Errors.sendError(res, Errors.ERR_TORRENT_ALREADY_ADDED)
         }
 
-        client.seed(videoPath, opts, (torrent) => {
+        client.seed(path, opts, (torrent) => {
           console.log('seeding infohash ' + torrent.infoHash + ' peerId=' + torrent.discovery.peerId)
           res.send({ torrentHashInfo: torrent.infoHash })
         })
@@ -37,7 +37,7 @@ export function seedNewVideo (req, res, next) {
   })
 }
 
-export function seed (req, res, next) {
+export function seedMonitored (req, res, next) {
   console.log('Received seed request');
   (async() => {
     const infoHash = await pMonitor.getSeedTorrent()
