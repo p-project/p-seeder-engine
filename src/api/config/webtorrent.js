@@ -1,4 +1,4 @@
-import WebTorrent from 'webtorrent'
+import WebTorrent from 'webtorrent-hybrid'
 
 const client = new WebTorrent()
 
