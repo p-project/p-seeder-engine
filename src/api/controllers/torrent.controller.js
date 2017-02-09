@@ -4,6 +4,7 @@ import fs from 'fs'
 
 import client from '../config/webtorrent'
 import * as pMonitor from '../config/pMonitor'
+import * as pApi from '../config/pApi'
 import * as Errors from '../config/errors'
 
 const opts = {
@@ -28,7 +29,10 @@ export function seed (req, res, next) {
 
         client.seed(path, opts, (torrent) => {
           console.log('seeding infohash ' + torrent.infoHash + ' peerId=' + torrent.discovery.peerId)
-          res.send({ torrentHashInfo: torrent.infoHash })
+          console.log(torrent.magnetURI)
+          pApi.createVideo(torrent).then(() => {
+            res.send({ torrentHashInfo: torrent.infoHash })
+          })
         })
       })
     } else {
