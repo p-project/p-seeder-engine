@@ -9,10 +9,16 @@ import * as Errors from '../config/errors'
 import client from '../config/webtorrent'
 
 function seed (path) {
+  var params = {
+    path,
+    desc: 'desc',
+    name: 'name',
+    categories: '/categories/1'
+  }
   return request(app)
     .post('/seed')
     .type('json')
-    .send({path})
+    .send(params)
 }
 
 describe('## Torrent APIs', () => {
@@ -21,14 +27,11 @@ describe('## Torrent APIs', () => {
       request(app).post('/seed').expect(400)
     )
 
-    it('Should return file not found', () =>
-      request(app)
-      .post('/seed')
-      .type('json')
-      .send({path: '/NotFound/file/not/Exist'})
-      .expect(Errors.ERR_SEED_FILE_NOT_FOUND.httpCode)
-      .expect(Errors.getResBody(Errors.ERR_SEED_FILE_NOT_FOUND))
-    )
+    it('Should return file not found', async () => {
+      const res = await seed('/NotFound/file/not/Exist')
+      expect(res.body).to.be.eql(Errors.getResBody(Errors.ERR_SEED_FILE_NOT_FOUND))
+      expect(res.statusCode).to.be.equal(Errors.ERR_SEED_FILE_NOT_FOUND.httpCode)
+    })
 
     it('Should return infoHash', async () => {
       const res = await seed(path.join(__dirname, '/fixtures/video3.avi'))

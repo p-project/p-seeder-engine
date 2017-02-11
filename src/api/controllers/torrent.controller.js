@@ -30,9 +30,14 @@ export function seed (req, res, next) {
         client.seed(path, opts, (torrent) => {
           console.log('seeding infohash ' + torrent.infoHash + ' peerId=' + torrent.discovery.peerId)
           console.log(torrent.magnetURI)
-          pApi.createVideo(torrent).then(() => {
-            res.send({ torrentHashInfo: torrent.infoHash })
-          })
+          pApi.createVideo(torrent,
+            {
+              name: req.body.name,
+              desc: req.body.desc,
+              path: req.body.categories
+            }).then(() => {
+              res.send({ torrentHashInfo: torrent.infoHash })
+            })
         })
       })
     } else {

@@ -6,7 +6,7 @@ import rp from 'request-promise'
 
 const urlPApi = process.env.P_API_URL
 
-export async function createVideo (torrent) {
+export async function createVideo (torrent, videoInfos) {
   const metadata = {
     height: 0,
     width: torrent.files[0].length,
@@ -15,10 +15,11 @@ export async function createVideo (torrent) {
   }
 
   const video = {
-    title: torrent.files[0].name,
-    description: 'string',
+    title: videoInfos.name,
+    description: videoInfos.desc,
     uploadDate: '2017-02-09T18:21:04.914Z',
-    metadata: metadata
+    metadata: metadata,
+    categories: videoInfos.categories
   }
 
   const resVideo = await rp({

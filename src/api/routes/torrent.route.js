@@ -7,7 +7,11 @@ const router = express.Router()
 
 // Seed a new file
 router.route('/seed')
-  .post(validate({body: {path: Joi.string().required()}}), torrentCtrl.seed)
+  .post(validate({body: {
+    name: Joi.string().required(),
+    desc: Joi.string().required(),
+    path: Joi.string().required(),
+    categories: Joi.string().required()}}), torrentCtrl.seed)
 
 // Seed files sent by the monitor
 router.put('/seedMonitored', torrentCtrl.seedMonitored)
