@@ -47,6 +47,28 @@ paths:
             type: array
             items:
               type: string
+  /add/:
+    get:
+      summary: Add
+      description: |
+        Add a torrent to be downloaded by infohash
+      parameters:
+        - name: infoHash
+          in: query
+          description: Video torrentHash
+          required: true
+          type: string
+          format: hash
+      responses:
+        200:
+          description: Video hashInfo
+          schema:
+            type: string
+            format: hash
+        default:
+          description: InfoHash parsing / Torrent already added
+          schema:
+            $ref: '#/definitions/Error'
   /seed/:
     post:
       summary: Seed
@@ -84,3 +106,22 @@ paths:
               torrentHashInfo:
                 type: string
                 format: infoHash
+        default:
+          description: Video path incorrect / Torrent already added
+          schema:
+            $ref: '#/definitions/Error'
+
+################################################################################
+#                               Definitions                                    #
+################################################################################
+definitions:
+  Error:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int32
+      msg:
+        type: string
+      status:
+        type: string
