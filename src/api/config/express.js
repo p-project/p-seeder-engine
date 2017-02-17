@@ -14,6 +14,8 @@ app.use(function (req, res, next) {
   next()
 })
 
+app.use('/docs', express.static('docs'))
+
 app.use('/', routes)
 
 export default app
