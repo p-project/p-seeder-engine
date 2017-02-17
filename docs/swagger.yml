@@ -1,0 +1,86 @@
+---
+swagger: '2.0'
+
+################################################################################
+#                              API Information                                 #
+################################################################################
+info:
+  version: "0.0.1"
+  title: P-Seeder-Engine
+  description: P-Project P-Seeder-Engine
+  termsOfService: http://helloreverb.com/terms/
+  contact:
+    name: P-Team
+    email: contact@p-project.com
+    url: http://p-project.io
+  license:
+    name: MIT
+    url: http://opensource.org/licenses/MIT
+
+################################################################################
+#                  Host, Base Path, Schemes and Content Types                  #
+################################################################################
+host: p-monitor.io
+basePath: /api
+schemes:
+  - http
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json
+
+
+################################################################################
+#                                           Paths                              #
+################################################################################
+paths:
+  /list/:
+    get:
+      summary: List
+      description: |
+        List all currently known infoHashes
+      responses:
+        200:
+          description: An array of torrent_hash
+          schema:
+            type: array
+            items:
+              type: string
+  /seed/:
+    post:
+      summary: Seed
+      description: |
+        Seed a new file
+      parameters:
+        - name: name
+          in: query
+          description: Video title
+          required: true
+          type: string
+        - name: desc
+          in: query
+          description: Video description
+          required: true
+          type: string
+        - name: path
+          in: query
+          description: Video fullpath
+          required: true
+          type: string
+          format: path
+        - name: categories
+          in: query
+          description: Video categories
+          required: true
+          type: string
+          format: /categories/[integer]
+      responses:
+        200:
+          description: An array of torrent_hash
+          schema:
+            type: object
+            properties:
+              torrentHashInfo:
+                type: string
+                format: infoHash
