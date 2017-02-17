@@ -27,7 +27,7 @@ export function seed (req, res, next) {
           return Errors.sendError(res, Errors.ERR_TORRENT_ALREADY_ADDED)
         }
 
-        client.seed(path, opts, (torrent) => {
+        client.seed(path, Object.assign(opts, {name: req.body.name}), (torrent) => {
           console.log('seeding infohash ' + torrent.infoHash + ' peerId=' + torrent.discovery.peerId)
           console.log(torrent.magnetURI)
           pApi.createVideo(torrent,
