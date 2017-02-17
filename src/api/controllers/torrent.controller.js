@@ -17,7 +17,7 @@ export function seed (req, res, next) {
   const path = req.body.path
   fs.stat(path, function (err, exists) {
     if (err == null) {
-      createTorrent(path, (createTorrentErr, torrentBuf) => {
+      createTorrent(path, {name: req.body.name}, (createTorrentErr, torrentBuf) => {
         if (createTorrentErr) {
           return Errors.sendUnexpectedError(res, createTorrentErr)
         }
