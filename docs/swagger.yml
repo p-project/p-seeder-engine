@@ -115,6 +115,57 @@ paths:
           description: InfoHash parsing / Torrent not found
           schema:
             $ref: '#/definitions/Error'
+
+  /info/{infoHash}:
+    get:
+      summary: Info
+      description: |
+        Get information about a torrent by infohash
+      parameters:
+        - name: infoHash
+          in: path
+          description: Video torrentHash
+          required: true
+          type: string
+          format: hash
+      responses:
+        200:
+          description: Video infos
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+              infoHash:
+                type: string
+                format: infoHash
+              timeRemaining:
+                type: number
+              received:
+                type: number
+              downloaded:
+                type: number
+              uploaded:
+                type: number
+              downloadSpeed:
+                type: number
+              uploadSpeed:
+                type: number
+              progress:
+                type: number
+              length:
+                type: number
+              ratio:
+                type: number
+              numPeers:
+                type: number
+              path:
+                type: string
+        default:
+          description: InfoHash parsing / Torrent not found
+          schema:
+            $ref: '#/definitions/Error'
+
   /seed/:
     post:
       summary: Seed
@@ -145,7 +196,7 @@ paths:
           format: /categories/[integer]
       responses:
         200:
-          description: An array of torrent_hash
+          description: Torrent InfoHash
           schema:
             type: object
             properties:
