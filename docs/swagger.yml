@@ -48,7 +48,7 @@ paths:
             items:
               type: string
   /add/:
-    get:
+    post:
       summary: Add
       description: |
         Add a torrent to be downloaded by infohash
@@ -67,6 +67,52 @@ paths:
             format: hash
         default:
           description: InfoHash parsing / Torrent already added
+          schema:
+            $ref: '#/definitions/Error'
+
+  /add/{infoHash}:
+    post:
+      summary: Add
+      description: |
+        Add a torrent to be downloaded by infohash
+      parameters:
+        - name: infoHash
+          in: path
+          description: Video torrentHash
+          required: true
+          type: string
+          format: hash
+      responses:
+        200:
+          description: Video hashInfo
+          schema:
+            type: string
+            format: hash
+        default:
+          description: InfoHash parsing / Torrent already added
+          schema:
+            $ref: '#/definitions/Error'
+
+  /delete/{infoHash}:
+    delete:
+      summary: Delete
+      description: |
+        Delete a torrent by infohash
+      parameters:
+        - name: infoHash
+          in: path
+          description: Video torrentHash
+          required: true
+          type: string
+          format: hash
+      responses:
+        200:
+          description: Video hashInfo
+          schema:
+            type: string
+            format: hash
+        default:
+          description: InfoHash parsing / Torrent not found
           schema:
             $ref: '#/definitions/Error'
   /seed/:
