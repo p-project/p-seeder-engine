@@ -15,9 +15,12 @@ const opts = {
 export function seed (req, res, next) {
   console.log('Seeding new file')
   const path = req.body.path
+  const pieces = path.split('.')
+  const nameWithExt = req.body.name + '.' + pieces[pieces.length - 1]
+  console.log(nameWithExt)
   fs.stat(path, function (err, exists) {
     if (err == null) {
-      createTorrent(path, {name: req.body.name}, (createTorrentErr, torrentBuf) => {
+      createTorrent(path, {name: nameWithExt}, (createTorrentErr, torrentBuf) => {
         if (createTorrentErr) {
           return Errors.sendUnexpectedError(res, createTorrentErr)
         }
@@ -27,7 +30,7 @@ export function seed (req, res, next) {
           return Errors.sendError(res, Errors.ERR_TORRENT_ALREADY_ADDED)
         }
 
-        client.seed(path, Object.assign(opts, {name: req.body.name}), (torrent) => {
+        client.seed(path, Object.assign(opts, {name: nameWithExt}), (torrent) => {
           console.log('seeding infohash ' + torrent.infoHash + ' peerId=' + torrent.discovery.peerId)
           console.log(torrent.magnetURI)
           pApi.createVideo(torrent,
