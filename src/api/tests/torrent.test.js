@@ -1,6 +1,6 @@
 import {} from '../../'
 
-import request from 'supertest-as-promised'
+import request from 'supertest'
 import path from 'path'
 import { expect } from 'chai'
 
