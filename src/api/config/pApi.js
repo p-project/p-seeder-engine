@@ -31,3 +31,13 @@ export async function createVideo (torrent, videoInfos) {
 
   console.log(resVideo)
 }
+
+export async function getCategory (categoryId) {
+  const resCategory = await rp({
+    method: 'GET',
+    uri: urlPApi + 'categories/' + categoryId,
+    json: true
+  })
+
+  return resCategory
+}
