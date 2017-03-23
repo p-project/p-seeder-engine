@@ -15,6 +15,7 @@ app.use(function (req, res, next) {
 })
 
 app.use('/docs', express.static('docs'))
+console.log('Api Docs is available : http://localhost:2342/docs/static/')
 
 app.use('/', routes)
 
