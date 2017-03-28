@@ -29,7 +29,7 @@ export async function createVideo (torrent, videoInfos) {
     json: true
   })
 
-  console.log(resVideo)
+  return resVideo
 }
 
 export async function getCategory (categoryId) {

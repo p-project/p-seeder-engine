@@ -38,8 +38,8 @@ export function seed (req, res, next) {
               name: req.body.name,
               desc: req.body.desc,
               path: req.body.categories
-            }).then(() => {
-              res.send({ torrentHashInfo: torrent.infoHash })
+            }).then((resVideo) => {
+              res.send(Object.assign(resVideo, { torrentHashInfo: torrent.infoHash }))
             })
         })
       })

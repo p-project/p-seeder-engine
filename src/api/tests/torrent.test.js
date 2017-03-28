@@ -35,7 +35,7 @@ describe('## Torrent APIs', () => {
 
     it('Should return infoHash', async () => {
       const res = await seed(path.join(__dirname, '/fixtures/video3.avi'))
-      return expect(res.body).to.have.property('torrentHashInfo')
+      return expect(res.body).to.have.property('id')
     }).timeout(20000)
 
     it('Should return duplicate error', async() => {
