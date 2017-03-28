@@ -200,6 +200,30 @@ paths:
           schema:
             type: object
             properties:
+              id:
+                type: number
+              title:
+                type: string
+              description:
+                type: string
+              uploadDate:
+                type: number
+              numberView:
+                type: number
+              metadata:
+                type: object
+                properties:
+                  id:
+                    type: number
+                  height:
+                    type: number
+                  width:
+                    type: number
+                  format:
+                    type: number
+                  hash:
+                    type: string
+                    format: infoHash
               torrentHashInfo:
                 type: string
                 format: infoHash
