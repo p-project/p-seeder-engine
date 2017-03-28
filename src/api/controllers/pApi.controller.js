@@ -7,3 +7,10 @@ export function getCategory (req, res, next) {
     res.send(resCategory)
   })().catch(next)
 }
+
+export function getVideo (req, res, next) {
+  (async() => {
+    const result = await pApi.request('GET', 'videos', req.body)
+    res.send(result)
+  })().catch(next)
+}

@@ -41,3 +41,12 @@ export async function getCategory (categoryId) {
 
   return resCategory
 }
+
+export function request (method, endpoint, body) {
+  return rp({
+    method,
+    uri: urlPApi + endpoint,
+    body,
+    json: true
+  })
+}
