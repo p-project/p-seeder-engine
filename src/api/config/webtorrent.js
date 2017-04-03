@@ -2,7 +2,11 @@ import WebTorrent from 'webtorrent'
 
 const client = new WebTorrent()
 
-console.log('[PeerId] ' + client.peerId)
+client.on('error', function (err) {
+  console.log('[WebtorrentClient] ' + err)
+})
+
+console.log('[WebtorrentClient] PeerId: ' + client.peerId)
 
 // Catch exit
 process.stdin.resume()
