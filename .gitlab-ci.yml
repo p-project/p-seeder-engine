@@ -2,6 +2,17 @@ image: node:latest
 
 test:
   script:
+    - git clone ssh://git@gitlab.dldl.fr:1002/p-project/p-monitor.git
+    - cd p-monitor
+    - npm i
+    - npm run build
+    - npm run start
+    - cd ..
+    - git clone ssh://git@gitlab.dldl.fr:1002/p-project/p-api.git
+    - ./bin/symfony_requirements
+    - ./bin/reset
+    - ./bin/console server:run -p 8001 &
+    - cd ..
     - npm i
     - npm run test
 lint:
