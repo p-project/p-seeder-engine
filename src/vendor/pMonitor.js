@@ -4,11 +4,11 @@
 **/
 import rp from 'request-promise'
 import TrackerClient from 'bittorrent-tracker'
+import { config } from '../config'
 
-const urlPMonitor = process.env.P_MONITOR_API_URL
 
 export async function getSeedTorrent () {
-  const res = await rp({method: 'POST', uri: urlPMonitor + 'getSeedTorrent'})
+  const res = await rp({method: 'POST', uri: config.pseeder.monitor.api + 'getSeedTorrent'})
               .catch(() => { return null })
   return res ? res.hashInfo : null
 }
@@ -21,7 +21,7 @@ export function scrape () {
   var requiredOpts = {
     infoHash: new Buffer('aaa67059ed6bd08362da625b3ae77f6f4a075aaa'),
     peerId: new Buffer('01234567890123456789'),
-    announce: [process.env.ANNOUNCE_URL_UDP],
+    announce: [config.pseeeder.monitor.announce],
     port: 4561
   }
   var client = new TrackerClient(requiredOpts)

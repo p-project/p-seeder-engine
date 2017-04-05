@@ -5,8 +5,8 @@ import path from 'path'
 import { expect } from 'chai'
 
 import app from '../'
-import * as Errors from '../config/errors'
-import client from '../config/webtorrent'
+import * as Errors from '../errors'
+import client from '../vendor/webtorrent'
 
 function seed (path) {
   var params = {

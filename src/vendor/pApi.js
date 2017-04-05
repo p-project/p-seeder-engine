@@ -3,8 +3,7 @@
 *
 **/
 import rp from 'request-promise'
-
-const urlPApi = process.env.P_API_URL
+import { config } from '../config'
 
 export async function createVideo (torrent, videoInfos) {
   const metadata = {
@@ -24,7 +23,7 @@ export async function createVideo (torrent, videoInfos) {
 
   const resVideo = await rp({
     method: 'POST',
-    uri: urlPApi + 'videos',
+    uri: config.pseeder.monitor.api + 'videos',
     body: video,
     json: true
   })
@@ -35,7 +34,7 @@ export async function createVideo (torrent, videoInfos) {
 export async function getCategory (categoryId) {
   const resCategory = await rp({
     method: 'GET',
-    uri: urlPApi + 'categories/' + categoryId,
+    uri: config.pseeder.monitor.api + 'categories/' + categoryId,
     json: true
   })
 
@@ -45,7 +44,7 @@ export async function getCategory (categoryId) {
 export function request (method, endpoint, body) {
   return rp({
     method,
-    uri: urlPApi + endpoint,
+    uri: config.pseeder.monitor.api + endpoint,
     body,
     json: true
   })

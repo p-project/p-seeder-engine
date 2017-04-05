@@ -1,4 +1,4 @@
-import * as pApi from '../config/pApi'
+import * as pApi from '../vendor/pApi'
 
 export function getCategory (req, res, next) {
   const categoryId = req.params.categoryId;

@@ -1,0 +1,7 @@
+pseeder:
+  port: 2342
+  download_path: '/tmp/p-seeder-engine'
+
+  monitor:
+    api: 'localhost:3001/api'
+    announce: 'localhost:3001/announce'

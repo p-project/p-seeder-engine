@@ -2,14 +2,15 @@ import parseTorrent from 'parse-torrent'
 import createTorrent from 'create-torrent'
 import fs from 'fs'
 
-import client from '../config/webtorrent'
-import * as pMonitor from '../config/pMonitor'
-import * as pApi from '../config/pApi'
-import * as Errors from '../config/errors'
+import client from '../vendor/webtorrent'
+import * as pMonitor from '../vendor/pMonitor'
+import * as pApi from '../vendor/pApi'
+import * as Errors from '../errors'
+import { config } from '../config'
 
 const opts = {
-  announce: [process.env.ANNOUNCE_URL],
-  path: process.env.DOWNLOAD_PATH
+  announce: [config.pseeder.monitor.announce],
+  path: config.pseeder.download_path
 }
 
 export function seed (req, res, next) {
