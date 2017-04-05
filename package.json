@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "nodemon -w src --exec \"babel --plugins transform-regenerator src -d dist\"",
     "test": "mocha --compilers js:babel-core/register --require babel-polyfill ./src/tests",
+    "format": "standard src/**.js --fix",
     "lint": "eslint src",
     "build": "babel src -s -D -d dist --presets es2015,stage-0",
     "start": "node dist"
@@ -29,7 +30,8 @@
     "joi": "^10.2.0",
     "request": "^2.81.0",
     "request-promise": "^4.1.1",
-    "webtorrent": "^0.98.14"
+    "webtorrent": "^0.98.14",
+    "yamljs": "^0.2.9"
   },
   "devDependencies": {
     "babel-cli": "^6.9.0",
@@ -45,6 +47,7 @@
     "eslint-plugin-standard": "^2.0.1",
     "mocha": "^3.1.2",
     "nodemon": "^1.11.0",
+    "standard": "^10.0.0",
     "supertest": "^2.0.1"
   },
   "bin": {

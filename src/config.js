@@ -1,5 +1,6 @@
 import merge from 'deepmerge'
 import fs from 'fs'
+import YAML from 'yamljs'
 
 let def = {
   pseeder: {
@@ -8,7 +9,7 @@ let def = {
 
     monitor: {
       api: 'localhost:3001/api',
-      announce: 'localhost:3001/announce',
+      announce: 'localhost:3001/announce'
     }
   }
 }
@@ -16,24 +17,22 @@ let def = {
 const homePath = `${process.env.HOME}/.config/p-seeder-engine/config.yml`
 const etcPath = '/etc/p-seeder-engine/config.yml'
 
-if(fs.existsSync(homePath)){
-  const configFile = yaml.safeLoad(fs.readFileSync(homePath, 'utf8'))
+if (fs.existsSync(homePath)) {
+  const configFile = YAML.parse(fs.readFileSync(homePath, 'utf8'))
   def = merge(def, configFile)
-
-} else if(fs.existsSync(etcPath)){
-  const configFile = yaml.safeLoad(fs.readFileSync(etcPath, 'utf8'))
+} else if (fs.existsSync(etcPath)) {
+  const configFile = YAML.parse(fs.readFileSync(etcPath, 'utf8'))
   def = merge(def, configFile)
-
 }
 
-export let config = def;
+export let config = def
 
-export function setOptions(program){
-  if(program.port){
+export function setOptions (program) {
+  if (program.port) {
     config.pseeder.port = program.port
   }
 
-  if(program.out){
+  if (program.out) {
     config.pseeder.download_path = program.out
   }
 }

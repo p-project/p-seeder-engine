@@ -6,7 +6,6 @@ import rp from 'request-promise'
 import TrackerClient from 'bittorrent-tracker'
 import { config } from '../config'
 
-
 export async function getSeedTorrent () {
   const res = await rp({method: 'POST', uri: config.pseeder.monitor.api + 'getSeedTorrent'})
               .catch(() => { return null })
