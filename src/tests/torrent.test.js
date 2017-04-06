@@ -4,7 +4,7 @@ import request from 'supertest'
 import path from 'path'
 import { expect } from 'chai'
 
-import app from '../'
+import app from '../vendor/express'
 import * as Errors from '../errors'
 import client from '../vendor/webtorrent'
 
@@ -21,8 +21,8 @@ function seed (path) {
     .send(params)
 }
 
-describe('## Torrent APIs', () => {
-  describe('# POST seed', () => {
+describe('Torrent APIs', () => {
+  describe('POST seed', () => {
     it('Should return bad request', () =>
       request(app).post('/seed').expect(400)
     )
@@ -44,7 +44,7 @@ describe('## Torrent APIs', () => {
     }).timeout(20000)
   })
 
-  describe('# PUT seedMonitored', () => {
+  describe('PUT seedMonitored', () => {
     it('Should return error monitor', () => {
       return request(app)
         .put('/seedMonitored')
@@ -53,7 +53,7 @@ describe('## Torrent APIs', () => {
     })
   })
 
-  describe('# GET list', () => {
+  describe('GET list', () => {
     it('Should list hashInfo', async () => {
       let res = await request(app)
         .get('/list')
@@ -63,7 +63,7 @@ describe('## Torrent APIs', () => {
     })
   })
 
-  describe('# POST add', () => {
+  describe('POST add', () => {
     it('Should return error parse infohash', () =>
       request(app)
       .post('/add/1234')
@@ -71,16 +71,17 @@ describe('## Torrent APIs', () => {
       .expect(Errors.getResBody(Errors.ERR_INFOHASH_PARSE))
     )
 
+
     it('Should return duplicate error', async() => {
       const res = await seed(path.join(__dirname, '/fixtures/video1.avi'))
       return request(app)
-        .post('/add/' + res.body.torrentHashInfo)
+        .post('/add/'+ res.body.torrentHashInfo)
         .expect(Errors.ERR_TORRENT_ALREADY_ADDED.httpCode)
         .expect(Errors.getResBody(Errors.ERR_TORRENT_ALREADY_ADDED))
     }).timeout(20000)
   })
 
-  describe('# POST add with json body', () => {
+  describe('POST add with json body', () => {
     it('Should return error parse infohash', () =>
       request(app)
       .post('/add')
@@ -90,18 +91,26 @@ describe('## Torrent APIs', () => {
       .expect(Errors.getResBody(Errors.ERR_INFOHASH_PARSE))
     )
 
-    it('Should return duplicate error', async() => {
-      const res = await seed(path.join(__dirname, '/fixtures/video2.avi'))
-      return request(app)
-        .post('/add')
-        .type('json')
-        .send({infoHash: res.body.torrentHashInfo})
-        .expect(Errors.ERR_TORRENT_ALREADY_ADDED.httpCode)
-        .expect(Errors.getResBody(Errors.ERR_TORRENT_ALREADY_ADDED))
-    }).timeout(20000)
+    it('Should add Big Buck Bunny\'s magnet without error', () =>
+      request(app)
+      .post('/add')
+      .type('json')
+      .send({ infoHash: 'magnet:?xt=urn:btih:565DB305A27FFB321FCC7B064AFD7BD73AEDDA2B&dn=bbb_sunflower_1080p_60fps_normal.mp4&tr=udp%3a%2f%2ftracker.openbittorrent.com%3a80%2fannounce&tr=udp%3a%2f%2ftracker.publicbt.com%3a80%2fannounce&ws=http%3a%2f%2fdistribution.bbb3d.renderfarming.net%2fvideo%2fmp4%2fbbb_sunflower_1080p_60fps_normal.mp4'})
+      .expect('565db305a27ffb321fcc7b064afd7bd73aedda2b')
+    ).timeout(20000)
+
+    // it('Should return duplicate error', async() => {
+    //   const res = await seed(path.join(__dirname, '/fixtures/video2.avi'))
+    //   return request(app)
+    //     .post('/add')
+    //     .type('json')
+    //     .send({infoHash: res.body.torrentHashInfo})
+    //     .expect(Errors.ERR_TORRENT_ALREADY_ADDED.httpCode)
+    //     .expect(Errors.getResBody(Errors.ERR_TORRENT_ALREADY_ADDED))
+    // }).timeout(20000)
   })
 
-  describe('# DELETE delete', () => {
+  describe('DELETE delete', () => {
     it('Should return error parse infohash', async() =>
       request(app)
       .delete('/delete/1234')
@@ -121,17 +130,17 @@ describe('## Torrent APIs', () => {
     const res = await seed(path.join(__dirname, '/fixtures/video2.avi'))
     const infoHash = res.body.torrentHashInfo
 
-    const oldTorrentLength = client.torrents.length
-
     await request(app)
-      .delete('/delete/' + infoHash)
+      .delete('/delete/'+ infoHash)
       .expect(200)
 
-    return expect(oldTorrentLength).to.be.equal(client.torrents.length + 1)
-  }).timeout(20000)
+    return request(app)
+      .get(`/info/${infoHash}`)
+      .expect(Errors.ERR_INFOHASH_NOT_FOUND.httpCode)
+  })
 })
 
-describe('# GET info', () => {
+describe('GET info', () => {
   it('Should return error parse infohash', async() =>
     request(app)
     .get('/info/1234')
@@ -149,7 +158,7 @@ describe('# GET info', () => {
     const res = await seed(path.join(__dirname, '/fixtures/video4.avi'))
     const infoHash = res.body.torrentHashInfo
 
-    const resInfo = await request(app).get('/info/' + infoHash)
+    const resInfo = await request(app).get('/info/'+ infoHash)
 
     expect(resInfo.body).to.exist
     expect(resInfo.body.name).to.exist
