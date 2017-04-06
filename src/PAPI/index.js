@@ -3,9 +3,8 @@
 *
 **/
 import rp from 'request-promise'
-import { config } from '../config'
 
-export async function createVideo (torrent, videoInfos) {
+export async function createVideo (torrent, videoInfos, config) {
   const metadata = {
     height: 0,
     width: torrent.files[0].length,
@@ -31,7 +30,7 @@ export async function createVideo (torrent, videoInfos) {
   return resVideo
 }
 
-export async function getCategory (categoryId) {
+export async function getCategory (categoryId, config) {
   const resCategory = await rp({
     method: 'GET',
     uri: `http://${config.pseeder.monitor.api}` + 'categories/' + categoryId,
@@ -41,7 +40,7 @@ export async function getCategory (categoryId) {
   return resCategory
 }
 
-export function request (method, endpoint, body) {
+export function request (method, endpoint, body, config) {
   return rp({
     method,
     uri: `http://${config.pseeder.monitor.api}` + endpoint,

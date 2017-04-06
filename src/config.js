@@ -2,7 +2,7 @@ import merge from 'deepmerge'
 import fs from 'fs'
 import YAML from 'yamljs'
 
-let def = {
+const defaultConfig = {
   pseeder: {
     port: 2342,
     download_path: '/tmp/p-seeder-engine',
@@ -13,26 +13,33 @@ let def = {
     }
   }
 }
-
 const homePath = `${process.env.HOME}/.config/p-seeder-engine/config.yml`
 const etcPath = '/etc/p-seeder-engine/config.yml'
 
-if (fs.existsSync(homePath)) {
-  const configFile = YAML.parse(fs.readFileSync(homePath, 'utf8'))
-  def = merge(def, configFile)
-} else if (fs.existsSync(etcPath)) {
-  const configFile = YAML.parse(fs.readFileSync(etcPath, 'utf8'))
-  def = merge(def, configFile)
-}
+export default class Config {
+  constructor(options) {
+    let conf = defaultConfig
 
-export let config = def
+    try {
+      const fileOverride = YAML.parse(fs.readFileSync(homePath))
+      conf = merge(conf, fileOverride)
+    } catch(e){
+      try {
+        const fileOverride = YAML.parse(fs.readFileSync(etcPath))
+        conf = merge(conf, fileOverride)
+      } catch(e){}
+    }
 
-export function setOptions (program) {
-  if (program.port) {
-    config.pseeder.port = program.port
-  }
+    if (options.port !== undefined) {
+      conf.port = options.port
+    }
 
-  if (program.out) {
-    config.pseeder.download_path = program.out
+    if (options.out !== undefined) {
+      conf.download_path = options.out
+    }
+
+    for (let prop in conf) {
+      this[prop] = conf[prop]
+    }
   }
 }

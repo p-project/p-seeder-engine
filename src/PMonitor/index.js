@@ -4,9 +4,8 @@
 **/
 import rp from 'request-promise'
 import TrackerClient from 'bittorrent-tracker'
-import { config } from '../config'
 
-export async function getSeedTorrent () {
+export async function getSeedTorrent (config) {
   const res = await rp({method: 'POST', uri: config.pseeder.monitor.api + 'getSeedTorrent'})
               .catch(() => { return null })
   return res ? res.hashInfo : null
@@ -16,7 +15,7 @@ export function notifySeeding () {
   return 'lol WIP'
 }
 
-export function scrape () {
+export function scrape (config) {
   var requiredOpts = {
     infoHash: new Buffer('aaa67059ed6bd08362da625b3ae77f6f4a075aaa'),
     peerId: new Buffer('01234567890123456789'),

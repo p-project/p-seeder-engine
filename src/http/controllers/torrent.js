@@ -2,58 +2,57 @@ import parseTorrent from 'parse-torrent'
 import createTorrent from 'create-torrent'
 import fs from 'fs'
 
-import client from '../vendor/webtorrent'
-import * as pMonitor from '../vendor/pMonitor'
-import * as pApi from '../vendor/pApi'
-import * as Errors from '../errors'
-import { config } from '../config'
+import * as pMonitor from '../../PMonitor'
+import * as pApi from '../../PAPI'
+import * as Errors from '../../errors'
 
-const opts = {
-  announce: [`ws://${config.pseeder.monitor.announce}`],
-  path: config.pseeder.download_path
+function opts (config) {
+  return {
+    announce: [`ws://${config.pseeder.monitor.announce}`],
+    path: config.pseeder.download_path
+  }
 }
 
-export function seed (req, res) {
+export function seed (req, res, config, client) {
   const path = req.body.path
   const pieces = path.split('.')
   const nameWithExt = req.body.name + '.' + pieces[pieces.length - 1]
-  fs.stat(path, function (err, exists) {
-    if (err == null) {
-      createTorrent(path, {name: nameWithExt}, (createTorrentErr, torrentBuf) => {
-        if (createTorrentErr) {
-          return Errors.sendUnexpectedError(res, createTorrentErr)
-        }
+  try {
+    fs.accessSync(path) // check that file exists
 
-        let existingTorrent = client.get(torrentBuf)
-        if (existingTorrent) {
-          return Errors.sendError(res, Errors.ERR_TORRENT_ALREADY_ADDED)
-        }
+    createTorrent(path, {name: nameWithExt}, (err, torrentBuf) => {
+      if (err) {
+        return Errors.sendUnexpectedError(res, err)
+      }
 
-        client.seed(path, Object.assign(opts, {name: nameWithExt}), async (torrent) => {
-          try {
-            const resVideo = await pApi.createVideo(torrent,
-              {
-                name: req.body.name,
-                desc: req.body.desc,
-                path: req.body.categories
-              })
-            res.send(Object.assign(resVideo, { torrentHashInfo: torrent.infoHash }))
-          } catch (e) {
-            console.error(e.message)
-          }
-        })
+      const existingTorrent = client.get(torrentBuf)
+      if (existingTorrent) {
+        return Errors.sendError(res, Errors.ERR_TORRENT_ALREADY_ADDED)
+      }
+
+      client.seed(path, Object.assign(opts(config), {name: nameWithExt}), async (torrent) => {
+        try {
+          res.send({ torrentHashInfo: torrent.infoHash })
+          pApi.createVideo(torrent, {
+            name: req.body.name,
+            desc: req.body.desc,
+            path: req.body.categories
+          }, config)
+        } catch (e) {
+          console.error(e.message)
+        }
       })
-    } else {
-      Errors.sendError(res, Errors.ERR_SEED_FILE_NOT_FOUND)
-    }
-  })
+    })
+  } catch (err) {
+    return Errors.sendError(res, Errors.ERR_SEED_FILE_NOT_FOUND)
+  }
 }
 
-export async function seedMonitored (req, res) {
+export async function seedMonitored (req, res, config, client) {
   try {
-    const infoHash = await pMonitor.getSeedTorrent()
+    const infoHash = await pMonitor.getSeedTorrent(config)
     if (infoHash) {
-      client.add(infoHash, opts, (torrent) => {
+      client.add(infoHash, opts(config), (torrent) => {
         pMonitor.notifySeeding()
         res.send(torrent.infoHash)
       })
@@ -65,12 +64,12 @@ export async function seedMonitored (req, res) {
   }
 }
 
-export function list (req, res) {
+export function list (req, res, config, client) {
   let torrentHashes = client.torrents.map((t) => t.infoHash)
   res.json(torrentHashes)
 }
 
-export function add (req, res) {
+export function add (req, res, config, client) {
   let infoHash = req.params.infoHash !== undefined
     ? req.params.infoHash
     : req.body.infoHash
@@ -85,12 +84,12 @@ export function add (req, res) {
     return Errors.sendError(res, Errors.ERR_TORRENT_ALREADY_ADDED)
   }
 
-  client.add(infoHash, opts, (torrent) => {
+  client.add(infoHash, opts(config), (torrent) => {
     res.send(torrent.infoHash)
   })
 }
 
-export function deleteTorrent (req, res) {
+export function deleteTorrent (req, res, config, client) {
   let infoHash = req.params.infoHash
   try {
     parseTorrent(infoHash)
@@ -112,7 +111,7 @@ export function deleteTorrent (req, res) {
   })
 }
 
-export function info (req, res) {
+export function info (req, res, config, client) {
   function pick (o, ...fields) {
     let res = {}
     fields.forEach((f) => { res[f] = o[f] })
