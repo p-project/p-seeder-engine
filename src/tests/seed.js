@@ -1,15 +1,16 @@
 import request from 'supertest'
 import test from 'ava'
 import path from 'path'
-import app from '../vendor/express'
+import { setup } from '.'
 
 test('POST seed without body', async t => {
+  const app = setup()
   let res = await request(app).get('/seed')
   t.is(res.status, 404)
 })
 
 test('Seed nonexistent file', async t => {
-  app.listen(0) // random port
+  const app = setup()
   const res = await request(app)
     .post('/seed')
     .type('json')
@@ -28,7 +29,7 @@ test('Seed nonexistent file', async t => {
 
 
 test('Seed new file', async t => {
-  app.listen(0) // random port
+  const app = setup()
   const file = path.join(__dirname, '/fixtures/video3.avi')
   const res = await request(app)
     .post('/seed')
@@ -44,7 +45,7 @@ test('Seed new file', async t => {
 })
 
 test('Seed duplicate file', async t => {
-  app.listen(0) // random port
+  const app = setup()
   const file = path.join(__dirname, '/fixtures/video3.avi')
 
   await request(app)

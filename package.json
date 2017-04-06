@@ -52,7 +52,10 @@
     "pseederd": "dist/index.js"
   },
   "ava": {
-    "files": [ "src/tests/*.js" ],
+    "files": [
+        "src/tests/*.js",
+        "!src/tests/index.js"
+    ],
     "source": [ "src/**.js" ],
     "require": [
       "babel-polyfill",
