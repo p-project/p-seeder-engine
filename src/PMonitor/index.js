@@ -1,14 +1,17 @@
 /**
-* P-monitor client
-*
-**/
+ * P-monitor client
+ *
+ **/
 import rp from 'request-promise'
 import TrackerClient from 'bittorrent-tracker'
 
 export async function getSeedTorrent (config) {
-  const res = await rp({method: 'POST', uri: config.pseeder.monitor.api + 'getSeedTorrent'})
-              .catch(() => { return null })
-  return res ? res.hashInfo : null
+  try {
+    const res = await rp({method: 'POST', uri: config.pseeder.monitor.api + 'getSeedTorrent'})
+    return res ? res.hashInfo : undefined
+  } catch(e) {
+    return undefined
+  }
 }
 
 export function notifySeeding () {

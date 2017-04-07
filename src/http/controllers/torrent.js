@@ -33,7 +33,7 @@ export function seed (req, res, config, client) {
       client.seed(path, Object.assign(opts(config), {name: nameWithExt}), async (torrent) => {
         try {
           res.send({ torrentHashInfo: torrent.infoHash })
-          pApi.createVideo(torrent, {
+          await pApi.createVideo(torrent, {
             name: req.body.name,
             desc: req.body.desc,
             path: req.body.categories

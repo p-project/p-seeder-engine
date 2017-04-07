@@ -20,7 +20,7 @@ export const ERR_TORRENT_ALREADY_ADDED = {
 
 export const ERR_INFOHASH_NOT_FOUND = {
   msg: 'Torrent not found',
-  httpCode: 400
+  httpCode: 404
 }
 
 export function sendError (res, error) {
