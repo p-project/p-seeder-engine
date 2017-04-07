@@ -12,7 +12,7 @@ program
 
 const config = new Config(program)
 const torrent = new WebTorrent()
-const web = new http(config, torrent)
+const web = http(config, torrent)
 
 console.error(`listening on port ${config.pseeder.port}`)
 web.listen(config.pseeder.port)

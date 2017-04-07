@@ -17,17 +17,17 @@ const homePath = `${process.env.HOME}/.config/p-seeder-engine/config.yml`
 const etcPath = '/etc/p-seeder-engine/config.yml'
 
 export default class Config {
-  constructor(options) {
+  constructor (options) {
     let conf = defaultConfig
 
     try {
       const fileOverride = YAML.parse(fs.readFileSync(homePath))
       conf = merge(conf, fileOverride)
-    } catch(e){
+    } catch (e) {
       try {
         const fileOverride = YAML.parse(fs.readFileSync(etcPath))
         conf = merge(conf, fileOverride)
-      } catch(e){}
+      } catch (e) {}
     }
 
     if (options.port !== undefined) {

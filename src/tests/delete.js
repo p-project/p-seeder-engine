@@ -8,7 +8,7 @@ test('Delete invalid infohash', async t => {
   const res = await request(app)
     .delete('/delete/1234')
   t.is(res.status, 400)
-  t.deepEqual(res.body,{
+  t.deepEqual(res.body, {
     message: 'Can\'t parse infoHash',
     status: 'error'
   })
@@ -19,7 +19,7 @@ test('Delete unknown infohash', async t => {
   const res = await request(app)
     .delete('/delete/30a9398b409c13399d54477766e5712f5022b7c8')
   t.is(res.status, 404)
-  t.deepEqual(res.body,{
+  t.deepEqual(res.body, {
     message: 'Torrent not found',
     status: 'error'
   })

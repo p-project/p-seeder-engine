@@ -15,18 +15,17 @@ test('Seed nonexistent file', async t => {
     .post('/seed')
     .type('json')
     .send({
-      path:'/NotFound/file/not/Exist',
+      path: '/NotFound/file/not/Exist',
       desc: 'desc',
       name: 'name',
       categories: '/categories/1'
     })
   t.is(res.status, 404)
-  t.deepEqual(res.body,{
+  t.deepEqual(res.body, {
     message: 'File not found',
     status: 'error'
   })
 })
-
 
 test('Seed new file', async t => {
   const app = setup()
@@ -41,7 +40,7 @@ test('Seed new file', async t => {
       categories: '/categories/1'
     })
   t.is(res.status, 200)
-  t.deepEqual(res.body,{ torrentHashInfo: '30a9398b409c13399d54477766e5712f5022b7c8' })
+  t.deepEqual(res.body, { torrentHashInfo: '30a9398b409c13399d54477766e5712f5022b7c8' })
 })
 
 test('Seed duplicate file', async t => {
@@ -69,7 +68,7 @@ test('Seed duplicate file', async t => {
     })
 
   t.is(res.status, 409)
-  t.deepEqual(res.body,{
+  t.deepEqual(res.body, {
     message: 'Torrent already added',
     status: 'error'
   })

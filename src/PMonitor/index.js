@@ -9,7 +9,7 @@ export async function getSeedTorrent (config) {
   try {
     const res = await rp({method: 'POST', uri: config.pseeder.monitor.api + 'getSeedTorrent'})
     return res ? res.hashInfo : undefined
-  } catch(e) {
+  } catch (e) {
     return undefined
   }
 }

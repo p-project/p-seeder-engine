@@ -8,9 +8,9 @@ test('Add invalid infohash', async t => {
   const res = await request(app)
     .post('/add')
     .type('json')
-    .send({ infoHash: '1234'})
+    .send({ infoHash: '1234' })
   t.is(res.status, 400)
-  t.deepEqual(res.body,{
+  t.deepEqual(res.body, {
     message: 'Can\'t parse infoHash',
     status: 'error'
   })
@@ -31,7 +31,7 @@ test('Add already present infohash', async t => {
   const res = await request(app)
     .post('/add/30a9398b409c13399d54477766e5712f5022b7c8')
   t.is(res.status, 409)
-  t.deepEqual(res.body,{
+  t.deepEqual(res.body, {
     message: 'Torrent already added',
     status: 'error'
   })
@@ -54,7 +54,7 @@ test('Add already present infohash through body', async t => {
     .type('json')
     .send({ infoHash: '30a9398b409c13399d54477766e5712f5022b7c8' })
   t.is(res.status, 409)
-  t.deepEqual(res.body,{
+  t.deepEqual(res.body, {
     message: 'Torrent already added',
     status: 'error'
   })
