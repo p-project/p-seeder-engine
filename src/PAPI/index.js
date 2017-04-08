@@ -22,7 +22,7 @@ export function createVideo (torrent, videoInfos, config) {
 
   return rp({
     method: 'POST',
-    uri: `http://${config.pseeder.monitor.api}` + 'videos',
+    uri: `http://${config.pseeder.papi}` + 'videos',
     body: video,
     json: true
   })
@@ -31,7 +31,7 @@ export function createVideo (torrent, videoInfos, config) {
 export function getCategory (categoryId, config) {
   return rp({
     method: 'GET',
-    uri: `http://${config.pseeder.monitor.api}` + 'categories/' + categoryId,
+    uri: `http://${config.pseeder.papi}` + 'categories/' + categoryId,
     json: true
   })
 }
@@ -39,7 +39,7 @@ export function getCategory (categoryId, config) {
 export function request (method, endpoint, body, config) {
   return rp({
     method,
-    uri: `http://${config.pseeder.monitor.api}` + endpoint,
+    uri: `http://${config.pseeder.papi}` + endpoint,
     body,
     json: true
   })

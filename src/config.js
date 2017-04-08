@@ -10,7 +10,9 @@ const defaultConfig = {
     monitor: {
       api: 'localhost:3001/api',
       announce: 'localhost:3001/announce'
-    }
+    },
+
+    papi: 'localhost:8001/'
   }
 }
 const homePath = `${process.env.HOME}/.config/p-seeder-engine/config.yml`
