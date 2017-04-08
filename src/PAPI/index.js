@@ -28,14 +28,6 @@ export function createVideo (torrent, videoInfos, config) {
   })
 }
 
-export function getCategory (categoryId, config) {
-  return rp({
-    method: 'GET',
-    uri: `http://${config.pseeder.papi}` + 'categories/' + categoryId,
-    json: true
-  })
-}
-
 export function request (method, endpoint, body, config) {
   return rp({
     method,
