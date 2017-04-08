@@ -41,6 +41,7 @@ export function request (method, endpoint, body, config) {
     method,
     uri: `http://${config.pseeder.papi}` + endpoint,
     body,
+    qs: body,
     json: true
   })
 }

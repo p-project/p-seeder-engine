@@ -7,6 +7,6 @@ export async function getCategory (req, res, config) {
 }
 
 export async function getVideo (req, res, config) {
-  const result = await pApi.request('GET', 'videos', req.body, config)
+  const result = await pApi.request('GET', 'videos', req.query, config)
   res.send(result)
 }
