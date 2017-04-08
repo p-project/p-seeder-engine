@@ -9,7 +9,7 @@ const defaultConfig = {
 
     monitor: {
       api: 'localhost:3001/api',
-      announce: 'localhost:3001/announce'
+      announce: 'localhost:8000/announce'
     },
 
     papi: 'localhost:8001/'
