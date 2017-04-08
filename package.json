@@ -29,7 +29,7 @@
     "joi": "^10.2.0",
     "request": "^2.81.0",
     "request-promise": "^4.1.1",
-    "webtorrent": "^0.98.14",
+    "webtorrent-hybrid": "^1.0.5",
     "yamljs": "^0.2.9"
   },
   "devDependencies": {
@@ -53,10 +53,12 @@
   },
   "ava": {
     "files": [
-        "src/tests/*.js",
-        "!src/tests/index.js"
+      "src/tests/*.js",
+      "!src/tests/index.js"
     ],
-    "source": [ "src/**.js" ],
+    "source": [
+      "src/**.js"
+    ],
     "require": [
       "babel-polyfill",
       "babel-register"

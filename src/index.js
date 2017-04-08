@@ -3,7 +3,7 @@
 import program from 'commander'
 import Config from './config'
 import http from './http'
-import WebTorrent from 'webtorrent'
+import WebTorrent from 'webtorrent-hybrid'
 
 program
   .option('-p --port <port>', 'Specify the port the daemon will listen on for commands.')
