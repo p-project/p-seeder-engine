@@ -40,6 +40,7 @@ export function seed (req, res, config, client) {
           res.send(Object.assign(resVideo, { torrentHashInfo: torrent.infoHash }))
         } catch (e) {
           console.error(e.message)
+          res.send({ torrentHashInfo: torrent.infoHash })
         }
       })
     })
