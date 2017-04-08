@@ -40,7 +40,7 @@ test('Seed new file', async t => {
       categories: '/categories/1'
     })
   t.is(res.status, 200)
-  t.deepEqual(res.body, { torrentHashInfo: '30a9398b409c13399d54477766e5712f5022b7c8' })
+  t.deepEqual(res.body.torrentHashInfo, '30a9398b409c13399d54477766e5712f5022b7c8')
 })
 
 test('Seed duplicate file', async t => {

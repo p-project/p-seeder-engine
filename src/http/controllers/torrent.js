@@ -32,12 +32,12 @@ export function seed (req, res, config, client) {
 
       client.seed(path, Object.assign(opts(config), {name: nameWithExt}), async (torrent) => {
         try {
-          res.send({ torrentHashInfo: torrent.infoHash })
-          await pApi.createVideo(torrent, {
+          const resVideo = await pApi.createVideo(torrent, {
             name: req.body.name,
             desc: req.body.desc,
             path: req.body.categories
           }, config)
+          res.send(Object.assign(resVideo, { torrentHashInfo: torrent.infoHash }))
         } catch (e) {
           console.error(e.message)
         }
