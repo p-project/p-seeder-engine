@@ -2,7 +2,6 @@ import parseTorrent from 'parse-torrent'
 import createTorrent from 'create-torrent'
 import fs from 'fs'
 
-import * as pMonitor from '../../PMonitor'
 import * as pApi from '../../PAPI'
 import * as Errors from '../../errors'
 
@@ -13,7 +12,7 @@ function opts (config) {
   }
 }
 
-export function seed (req, res, config, client) {
+export function seed (req, res, config, client, pMonitor) {
   const path = req.body.path
   const pieces = path.split('.')
   const nameWithExt = req.body.name + '.' + pieces[pieces.length - 1]
@@ -52,7 +51,7 @@ export function seed (req, res, config, client) {
   }
 }
 
-export async function seedMonitored (req, res, config, client) {
+export async function seedMonitored (req, res, config, client, pMonitor) {
   try {
     const infoHash = await pMonitor.getSeedTorrent(config)
     if (infoHash) {

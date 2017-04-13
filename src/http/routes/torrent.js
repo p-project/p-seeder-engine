@@ -3,7 +3,7 @@ import validate from 'express-validation'
 import * as torrentCtrl from '../controllers/torrent'
 import Joi from 'joi'
 
-export default function routes (config, torrent) {
+export default function routes (config, torrent, pMonitor) {
   const router = express.Router()
 
   // Seed a new file
@@ -13,11 +13,11 @@ export default function routes (config, torrent) {
       desc: Joi.string().required(),
       path: Joi.string().required(),
       categories: Joi.string().required()}}),
-    (req, res) => torrentCtrl.seed(req, res, config, torrent))
+    (req, res) => torrentCtrl.seed(req, res, config, torrent, pMonitor))
 
   // Seed files sent by the monitor
   router.put('/seedMonitored',
-    (req, res) => torrentCtrl.seedMonitored(req, res, config, torrent))
+    (req, res) => torrentCtrl.seedMonitored(req, res, config, torrent, pMonitor))
 
   // List all currently known infoHashes
   router.get('/list',

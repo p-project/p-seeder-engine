@@ -3,7 +3,7 @@ import bodyParser from 'body-parser'
 
 import routes from './routes'
 
-export default function http (config, torrent) {
+export default function http (config, torrent, pMonitor) {
   const app = express()
   app.use(bodyParser.urlencoded({ extended: false }))
   app.use(bodyParser.json('*/*'))
@@ -16,6 +16,6 @@ export default function http (config, torrent) {
 
   app.use('/docs', express.static('docs'))
 
-  app.use('/', routes(config, torrent))
+  app.use('/', routes(config, torrent, pMonitor))
   return app
 }
