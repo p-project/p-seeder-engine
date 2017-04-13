@@ -30,6 +30,7 @@
     "request": "^2.81.0",
     "request-promise": "^4.1.1",
     "webtorrent-hybrid": "^1.0.5",
+    "ws": "^2.2.3",
     "yamljs": "^0.2.9"
   },
   "devDependencies": {

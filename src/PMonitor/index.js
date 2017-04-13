@@ -4,6 +4,7 @@
  **/
 import rp from 'request-promise'
 import TrackerClient from 'bittorrent-tracker'
+import WebSocket from 'ws'
 
 export async function getSeedTorrent (config) {
   try {
@@ -14,7 +15,13 @@ export async function getSeedTorrent (config) {
   }
 }
 
-export function notifySeeding () {
+export function notifySeeding (config) {
+  const ws = new WebSocket(config.pseeder.monitor.ws, {
+    perMessageDeflate: false
+  })
+  ws.on('open', function open () {
+    ws.send('something')
+  })
   return 'lol WIP'
 }
 

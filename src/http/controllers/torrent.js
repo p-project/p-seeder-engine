@@ -37,6 +37,9 @@ export function seed (req, res, config, client) {
             desc: req.body.desc,
             path: req.body.categories
           }, config)
+
+          pMonitor.notifySeeding(config)
+
           res.send(Object.assign(resVideo, { torrentHashInfo: torrent.infoHash }))
         } catch (e) {
           console.error(e.message)
@@ -54,7 +57,7 @@ export async function seedMonitored (req, res, config, client) {
     const infoHash = await pMonitor.getSeedTorrent(config)
     if (infoHash) {
       client.add(infoHash, opts(config), (torrent) => {
-        pMonitor.notifySeeding()
+        pMonitor.notifySeeding(config)
         res.send(torrent.infoHash)
       })
     } else {
