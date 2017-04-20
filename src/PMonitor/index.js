@@ -7,18 +7,18 @@ import TrackerClient from 'bittorrent-tracker'
 import WebSocket from 'ws'
 
 class PMonitor {
-  constructor (config) {
+  constructor (config, client) {
     this.config = config
-    this.ws = this.initWebsocket(config)
+    this.ws = this.initWebsocket(config, client)
   }
 
-  initWebsocket (config) {
+  initWebsocket (config, client) {
     let ws = new WebSocket(config.pseeder.monitor.ws, {
       perMessageDeflate: false
     })
-
+    const self = this
     ws.on('open', function open () {
-      ws.send('something')
+      self.register(client.peerId)
     })
     return ws
   }
@@ -32,8 +32,16 @@ class PMonitor {
     }
   }
 
-  notifySeeding () {
-    this.ws.send('notify seeding')
+  register (peerId) {
+    this.sendJson({endpoint: 'register', peerId})
+  }
+
+  notifySeeding (hashInfo) {
+    this.sendJson({endpoint: 'seeding', hashInfo})
+  }
+
+  sendJson (object) {
+    this.ws.send(JSON.stringify(object))
   }
 
   scrape (config) {

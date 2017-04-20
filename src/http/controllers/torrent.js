@@ -37,7 +37,7 @@ export function seed (req, res, config, client, pMonitor) {
             path: req.body.categories
           }, config)
 
-          pMonitor.notifySeeding(config)
+          pMonitor.notifySeeding(torrent.infoHash)
 
           res.send(Object.assign(resVideo, { torrentHashInfo: torrent.infoHash }))
         } catch (e) {

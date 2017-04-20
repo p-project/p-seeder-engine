@@ -13,7 +13,8 @@ program
 
 const config = new Config(program)
 const torrent = new WebTorrent()
-const pMonitor = new PMonitor(config)
+
+const pMonitor = new PMonitor(config, torrent)
 const web = http(config, torrent, pMonitor)
 
 console.error(`listening on port ${config.pseeder.port}`)
