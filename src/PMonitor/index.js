@@ -17,8 +17,12 @@ class PMonitor {
       perMessageDeflate: false
     })
     const self = this
-    ws.on('open', function open () {
+    ws.on('open', function () {
       self.register(client.peerId)
+    })
+    ws.on('close', function () {
+      console.log('P-Monitor closed connection')
+      process.exit()
     })
     return ws
   }
