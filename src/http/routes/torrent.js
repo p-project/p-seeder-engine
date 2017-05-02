@@ -35,7 +35,7 @@ export default function routes (config, torrent, pMonitor) {
 
   // Delete a torrent by infohash
   router.delete('/delete/:infoHash',
-    (req, res) => torrentCtrl.deleteTorrent(req, res, config, torrent))
+    (req, res) => torrentCtrl.deleteTorrent(req, res, config, torrent, pMonitor))
 
   // Get information about a torrent by infohash
   router.get('/info/:infoHash',

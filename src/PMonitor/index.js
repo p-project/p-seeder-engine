@@ -44,6 +44,10 @@ class PMonitor {
     this.sendJson({endpoint: 'seeding', hashInfo})
   }
 
+  removeSeed (hashInfo) {
+    this.sendJson({endpoint: 'remove', hashInfo})
+  }
+
   sendJson (object) {
     this.ws.send(JSON.stringify(object))
   }

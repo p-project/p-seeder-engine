@@ -92,7 +92,7 @@ export function add (req, res, config, client) {
   })
 }
 
-export function deleteTorrent (req, res, config, client) {
+export function deleteTorrent (req, res, config, client, pMonitor) {
   let infoHash = req.params.infoHash
   try {
     parseTorrent(infoHash)
@@ -109,6 +109,7 @@ export function deleteTorrent (req, res, config, client) {
     if (err) {
       res.send({error: err.message})
     } else {
+      pMonitor.removeSeed(infoHash)
       res.send('removed')
     }
   })
