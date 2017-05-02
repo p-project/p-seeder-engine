@@ -5618,7 +5618,7 @@ write@^0.2.1:
   dependencies:
     mkdirp "^0.5.1"
 
-ws@^2.0.0, ws@^2.2.0:
+ws@^2.0.0, ws@^2.2.0, ws@^2.2.3:
   version "2.2.3"
   resolved "https://registry.yarnpkg.com/ws/-/ws-2.2.3.tgz#f36c9719a56dff813f455af912a2078145bbd940"
   dependencies:

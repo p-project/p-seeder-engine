@@ -8,8 +8,7 @@ export function createVideo (torrent, videoInfos, config) {
   const metadata = {
     height: 0,
     width: torrent.files[0].length,
-    format: 'kekFormat',
-    hash: torrent.magnetURI
+    format: 'kekFormat'
   }
 
   const video = {
@@ -17,7 +16,9 @@ export function createVideo (torrent, videoInfos, config) {
     description: videoInfos.desc,
     uploadDate: '2017-02-09T18:21:04.914Z',
     metadata: metadata,
-    categories: videoInfos.categories
+    categories: videoInfos.categories,
+    hash: torrent.infoHash,
+    magnet: torrent.magnetURI
   }
 
   return rp({
