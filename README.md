@@ -2,6 +2,7 @@
 
 Webtorrent-based bittorent daemon that can be controlled through HTTP requests.
 
+[![Build Status](https://travis-ci.org/p-project/p-seeder-engine.svg?branch=master)](https://travis-ci.org/p-project/p-seeder-engine)
 [![Standard - JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](http://standardjs.com/)
 
 ## Install
