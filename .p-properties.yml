@@ -2,6 +2,7 @@ dependencies:
   bin:
     - git
     - node
+    - npm
     - yarn
 install:
-  - npm run install
+  - npm run reset

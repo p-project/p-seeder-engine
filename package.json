@@ -10,7 +10,7 @@
     "lint": "eslint src",
     "build": "babel src -s -D -d dist --presets es2015,stage-0",
     "start": "node dist",
-    "install": "yarn && npm run build"
+    "reset": "yarn && npm run build"
   },
   "repository": {
     "type": "git",
