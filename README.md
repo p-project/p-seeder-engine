@@ -6,15 +6,9 @@ Webtorrent-based bittorent daemon that can be controlled through HTTP requests.
 [![Standard - JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](http://standardjs.com/)
 
 ## Install
-Clone the repo then install the dependencies
+Clone the repo then install the dependencies and build the project:
 ```
-npm install
-```
-
-## Build
-Build the project to make it node compatible
-```
-npm run build
+npm run install
 ```
 
 ## Usage
