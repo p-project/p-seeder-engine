@@ -5,4 +5,7 @@ dependencies:
     - npm
     - yarn
 install:
-  - npm run reset
+  - yarn
+run:
+  - npm run build
+  - npm run start

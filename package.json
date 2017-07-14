@@ -9,8 +9,7 @@
     "format": "standard src/**.js --fix",
     "lint": "eslint src",
     "build": "babel src -s -D -d dist --presets es2015,stage-0",
-    "start": "node dist",
-    "reset": "yarn && npm run build"
+    "start": "node dist"
   },
   "repository": {
     "type": "git",
