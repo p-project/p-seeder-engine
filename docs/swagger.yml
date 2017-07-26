@@ -1,27 +1,14 @@
 ---
 swagger: '2.0'
 
-################################################################################
-#                              API Information                                 #
-################################################################################
 info:
-  version: "0.0.1"
+  version: "0.1.0"
   title: P-Seeder-Engine
   description: P-Project P-Seeder-Engine
-  termsOfService: http://helloreverb.com/terms/
-  contact:
-    name: P-Team
-    email: contact@p-project.com
-    url: http://p-project.io
   license:
     name: MIT
     url: http://opensource.org/licenses/MIT
 
-################################################################################
-#                  Host, Base Path, Schemes and Content Types                  #
-################################################################################
-host: p-monitor.io
-basePath: /api
 schemes:
   - http
   - https
@@ -31,114 +18,90 @@ produces:
   - application/json
 
 
-################################################################################
-#                                           Paths                              #
-################################################################################
 paths:
-  /list/:
+  /torrent/:
     get:
-      summary: List
-      description: |
-        List all currently known infoHashes
+      summary: List torrents
+      description: List all loaded torrent identifiers
       responses:
         200:
-          description: An array of torrent_hash
+          description: An array of identifiers.
           schema:
             type: array
             items:
               type: string
-  /add/:
+              format: hash
     post:
-      summary: Add
-      description: |
-        Add a torrent to be downloaded by infohash
+      summary: Create torrent from path
+      description: Create and add a new torrent from a file path
       parameters:
-        - name: infoHash
+        - name: title
           in: query
-          description: Video torrentHash
-          required: true
+          description: Torrent title
           type: string
-          format: hash
+        - name: description
+          in: query
+          description: Torrent description
+          type: string
+        - name: path
+          in: query
+          description: The path of the file to seed
+          type: string
+          format: path
       responses:
         200:
-          description: Video hashInfo
+          description: Torrent identifier
           schema:
-            type: string
-            format: hash
+            type: object
+            properties:
+              id:
+                type: string
+                format: hash
+              uploadDate:
+                type: number
+              metadata:
+                type: object
+                properties:
+                  height:
+                    type: number
+                  width:
+                    type: number
+                  format:
+                    type: number
+                  hash:
+                    type: string
+                    format: hash
+              categories:
+                type: array
+                items:
+                  type: string
         default:
-          description: InfoHash parsing / Torrent already added
+          description: Video path incorrect or torrent already added
           schema:
             $ref: '#/definitions/Error'
-
-  /add/{infoHash}:
-    post:
-      summary: Add
-      description: |
-        Add a torrent to be downloaded by infohash
-      parameters:
-        - name: infoHash
-          in: path
-          description: Video torrentHash
-          required: true
-          type: string
-          format: hash
-      responses:
-        200:
-          description: Video hashInfo
-          schema:
-            type: string
-            format: hash
-        default:
-          description: InfoHash parsing / Torrent already added
-          schema:
-            $ref: '#/definitions/Error'
-
-  /delete/{infoHash}:
-    delete:
-      summary: Delete
-      description: |
-        Delete a torrent by infohash
-      parameters:
-        - name: infoHash
-          in: path
-          description: Video torrentHash
-          required: true
-          type: string
-          format: hash
-      responses:
-        200:
-          description: Video hashInfo
-          schema:
-            type: string
-            format: hash
-        default:
-          description: InfoHash parsing / Torrent not found
-          schema:
-            $ref: '#/definitions/Error'
-
-  /info/{infoHash}:
+      
+  /torrent/{id}:
     get:
-      summary: Info
-      description: |
-        Get information about a torrent by infohash
+      summary: List torrents
+      description: List all loaded torrent identifiers
       parameters:
-        - name: infoHash
+        - name: id
           in: path
-          description: Video torrentHash
+          description: The torrent identifier (usually, infohash)
           required: true
           type: string
           format: hash
       responses:
         200:
-          description: Video infos
+          description: Torrent information
           schema:
             type: object
             properties:
               name:
                 type: string
-              infoHash:
+              id:
                 type: string
-                format: infoHash
+                format: hash
               timeRemaining:
                 type: number
               received:
@@ -165,76 +128,48 @@ paths:
           description: InfoHash parsing / Torrent not found
           schema:
             $ref: '#/definitions/Error'
-
-  /seed/:
     post:
-      summary: Seed
-      description: |
-        Seed a new file
+      summary: Add torrent
+      description: Add a torrent from an identifier
       parameters:
-        - name: name
-          in: query
-          description: Video title
+        - name: id
+          in: path
+          description: Torrent identifier (usually, infohash)
           required: true
           type: string
-        - name: desc
-          in: query
-          description: Video description
-          required: true
-          type: string
-        - name: path
-          in: query
-          description: Video fullpath
-          required: true
-          type: string
-          format: path
-        - name: categories
-          in: query
-          description: Video categories
-          required: true
-          type: string
-          format: /categories/[integer]
+          format: hash
       responses:
         200:
-          description: Torrent InfoHash
+          description: Torrent identifier
           schema:
-            type: object
-            properties:
-              id:
-                type: number
-              title:
-                type: string
-              description:
-                type: string
-              uploadDate:
-                type: number
-              numberView:
-                type: number
-              metadata:
-                type: object
-                properties:
-                  id:
-                    type: number
-                  height:
-                    type: number
-                  width:
-                    type: number
-                  format:
-                    type: number
-                  hash:
-                    type: string
-                    format: infoHash
-              torrentHashInfo:
-                type: string
-                format: infoHash
+            type: string
+            format: hash
         default:
-          description: Video path incorrect / Torrent already added
+          description: Identifier incorrect or torrent already added
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      summary: Remove torrent
+      description: |
+        Delete a torrent by infohash
+      parameters:
+        - name: id
+          in: path
+          description: Torrent identifier
+          required: true
+          type: string
+          format: hash
+      responses:
+        200:
+          description: Torrent identifier
+          schema:
+            type: string
+            format: hash
+        default:
+          description: InfoHash parsing / Torrent not found
           schema:
             $ref: '#/definitions/Error'
 
-################################################################################
-#                               Definitions                                    #
-################################################################################
 definitions:
   Error:
     type: object
